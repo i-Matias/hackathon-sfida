@@ -31,7 +31,7 @@ export default function Register() {
       });
 
       // Navigate based on role
-      navigate(role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
+      navigate("/");
     } catch (err) {
       // Error is handled in the store
     }
