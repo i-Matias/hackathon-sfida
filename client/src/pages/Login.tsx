@@ -13,9 +13,9 @@ export default function Login() {
   const location = useLocation();
 
   // Check if we have a redirect path from a previous navigation attempt
-  const from =
-    location.state?.from?.pathname ||
-    (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
+  // const from =
+  //   location.state?.from?.pathname ||
+  //   (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
 
   const { t } = useLanguage();
 
@@ -47,7 +47,7 @@ export default function Login() {
       }
 
       // Navigate to the intended destination or default dashboard based on role
-      navigate(from, { replace: true });
+      navigate("/");
     } catch (err) {
       // Error is handled in the store
     }
