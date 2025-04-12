@@ -3,7 +3,7 @@ import axios from "./axios";
 export interface LoginCredentials {
   email: string;
   password: string;
-  roleId: number;
+  roleId?: number; // Make roleId optional
 }
 
 export interface RegisterData {
@@ -25,7 +25,7 @@ export interface User {
 
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    // Remove roleId from request as the server doesn't use it for login
+    // Only send email and password to the server
     const { email, password } = credentials;
     const response = await axios.post("/login", { email, password });
     return response.data;

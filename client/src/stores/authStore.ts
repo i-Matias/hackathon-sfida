@@ -43,12 +43,16 @@ export const useAuthStore = create<AuthState>((set) => ({
         user: response.user,
         isLoading: false,
       });
+
+      // Return the user to be used by the login component
+      return response.user;
     } catch (err) {
       set({
         error:
           err instanceof Error ? err.message : "An error occurred during login",
         isLoading: false,
       });
+      throw err; // Rethrow to let the component handle it
     }
   },
 
