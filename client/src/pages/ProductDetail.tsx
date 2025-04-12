@@ -1,18 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import "../styles/ProductDetail.css";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  description: string;
-  userId: number;
-  user: {
-    username: string;
-  };
-}
+import { useProducts } from "../hooks/useProducts";
+import { useRequests } from "../hooks/useRequests";
 
 interface ProductDetailProps {
   user: { id: number; role: string } | null;
@@ -20,47 +10,18 @@ interface ProductDetailProps {
 
 export default function ProductDetail({ user }: ProductDetailProps) {
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Product | null>(null);
+  const productId = id ? parseInt(id) : 0;
   const [requestQuantity, setRequestQuantity] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [requestSuccess, setRequestSuccess] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Fetch product details
-    const fetchProduct = async () => {
-      try {
-        // In a real app, this would use actual API
-        // const response = await fetch(`http://localhost:3000/products/${id}`);
-        // const data = await response.json();
+  const { useProduct } = useProducts();
+  const { useCreateRequest } = useRequests();
 
-        // Mock data for demo
-        const mockProduct = {
-          id: Number(id),
-          name: "Domate Bio",
-          price: 2.5,
-          quantity: 50,
-          description:
-            "Domate organike të kultivuara në Serra. Të freskëta dhe pa pesticide, të rritura me kujdes të veçantë për të ruajtur shijen e natyrshme.",
-          userId: 2,
-          user: {
-            username: "Agron Fermer",
-          },
-        };
+  const { data, isLoading, error } = useProduct(productId);
+  const product = data?.product;
 
-        setProduct(mockProduct);
-      } catch (err) {
-        setError("Gabim në ngarkim të produktit");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      fetchProduct();
-    }
-  }, [id]);
+  const createRequestMutation = useCreateRequest();
 
   const handleRequestSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,19 +32,12 @@ export default function ProductDetail({ user }: ProductDetailProps) {
     }
 
     try {
-      // In a real app, this would call an actual API
-      // await fetch("http://localhost:3000/requests", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     customerId: user.id,
-      //     productId: product?.id,
-      //     quantity: requestQuantity,
-      //     status: "pending"
-      //   }),
-      // });
+      await createRequestMutation.mutateAsync({
+        customerId: user.id,
+        productId,
+        quantity: requestQuantity,
+        status: "pending",
+      });
 
       setRequestSuccess(true);
 
@@ -93,11 +47,11 @@ export default function ProductDetail({ user }: ProductDetailProps) {
         setRequestQuantity(1);
       }, 3000);
     } catch (err) {
-      setError("Gabim në dërgimin e kërkesës");
+      // Error is handled by the mutation
     }
   };
 
-  if (loading) return <div className="loading">Duke ngarkuar...</div>;
+  if (isLoading) return <div className="loading">Duke ngarkuar...</div>;
   if (!product) return <div className="error-message">Produkti nuk u gjet</div>;
 
   const isOwner = user && user.role === "farmer" && product.userId === user.id;
@@ -108,7 +62,12 @@ export default function ProductDetail({ user }: ProductDetailProps) {
         ← Kthehu te produktet
       </Link>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">Gabim në ngarkim të produktit</div>
+      )}
+      {createRequestMutation.error && (
+        <div className="error-message">Gabim në dërgimin e kërkesës</div>
+      )}
       {requestSuccess && (
         <div className="success-message">
           Kërkesa juaj u dërgua me sukses! Fermeri do të përgjigjet së shpejti.
@@ -160,8 +119,14 @@ export default function ProductDetail({ user }: ProductDetailProps) {
                 />
               </div>
 
-              <button type="submit" className="request-button">
-                Dërgo Kërkesën për Blerje
+              <button
+                type="submit"
+                className="request-button"
+                disabled={createRequestMutation.isPending}
+              >
+                {createRequestMutation.isPending
+                  ? "Duke dërguar..."
+                  : "Dërgo Kërkesën për Blerje"}
               </button>
             </form>
           ) : (

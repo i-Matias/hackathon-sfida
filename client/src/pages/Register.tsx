@@ -1,54 +1,37 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
+import { useAuthStore } from "../stores/authStore";
 
-interface RegisterProps {
-  onLogin: (user: { id: number; role: string }) => void;
-}
-
-export default function Register({ onLogin }: RegisterProps) {
+export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const { register, isLoading, error, clearError } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    clearError();
+
+    if (!username || !email || !password) {
+      return; // Form validation should handle this
+    }
 
     try {
-      // In a real app, this would call an actual API
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: username,
-          email,
-          password,
-          roleId: role === "farmer" ? 1 : 2,
-        }),
+      await register({
+        userName: username,
+        email,
+        password,
+        roleId: role === "farmer" ? 1 : 2,
       });
 
-      // Mock successful registration for demo purpose
-      if (username && email && password) {
-        const user = {
-          id: 1,
-          role: role,
-        };
-
-        onLogin(user);
-        navigate(
-          role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard"
-        );
-      } else {
-        setError("Të gjitha fushat janë të detyrueshme");
-      }
+      // Navigate based on role
+      navigate(role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
     } catch (err) {
-      setError("Gabim në regjistrim. Ju lutemi provoni përsëri.");
+      // Error is handled in the store
     }
   };
 
@@ -122,8 +105,8 @@ export default function Register({ onLogin }: RegisterProps) {
             </div>
           </div>
 
-          <button type="submit" className="auth-button">
-            Regjistrohu
+          <button type="submit" className="auth-button" disabled={isLoading}>
+            {isLoading ? "Duke u regjistruar..." : "Regjistrohu"}
           </button>
         </form>
 

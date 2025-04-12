@@ -1,10 +1,29 @@
-import { Router } from 'express';
-import productController from '../controllers/productController';
+import { Router } from "express";
+import productController from "../controllers/productController";
+import { isResourceOwner } from "../middleware/authMiddleware";
+import productService from "../services/productService";
 
 export const router = Router();
 
-router.post('/products', productController.addProduct);           // Add product 
-router.get('/products', productController.getAllProducts);       // Get all products
-router.get('/products/user', productController.getUserProducts); // Get products by user
-router.put('/products/:productId', productController.updateProduct); // Update product
-router.delete('/products/:productId', productController.deleteProduct); // Delete product
+// Public routes
+router.get("/products", productController.getAllProducts);
+router.get("/products/:productId", productController.getProductById);
+
+// Get user's products - must come before the specific :productId routes
+router.get("/products/user", productController.getUserProducts);
+
+// Routes that require ownership check
+router.put(
+  "/products/:productId",
+  isResourceOwner(productService.getProductById, "productId"),
+  productController.updateProduct
+);
+
+router.delete(
+  "/products/:productId",
+  isResourceOwner(productService.getProductById, "productId"),
+  productController.deleteProduct
+);
+
+// Add product
+router.post("/products", productController.addProduct);

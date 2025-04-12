@@ -1,22 +1,45 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import "../styles/ProductForm.css";
 import { useProducts } from "../hooks/useProducts";
 
-interface AddProductProps {
+interface EditProductProps {
   userId: number;
 }
 
-export default function AddProduct({ userId }: AddProductProps) {
+export default function EditProduct({ userId }: EditProductProps) {
+  const { id } = useParams<{ id: string }>();
+  const productId = parseInt(id || "0");
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
   const [description, setDescription] = useState("");
   const [success, setSuccess] = useState(false);
+  const [unauthorized, setUnauthorized] = useState(false);
   const navigate = useNavigate();
 
-  const { useCreateProduct } = useProducts();
-  const createMutation = useCreateProduct();
+  const { useProduct, useUpdateProduct } = useProducts();
+  const { data, isLoading: isLoadingProduct } = useProduct(productId);
+  const updateMutation = useUpdateProduct();
+
+  // Load product data when available and verify ownership
+  useEffect(() => {
+    if (data?.product) {
+      const product = data.product;
+
+      // Verify the product belongs to the current user
+      if (product.userId !== userId) {
+        setUnauthorized(true);
+        return;
+      }
+
+      setName(product.name);
+      setPrice(product.price.toString());
+      setQuantity(product.quantity.toString());
+      setDescription(product.description);
+    }
+  }, [data, userId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +50,14 @@ export default function AddProduct({ userId }: AddProductProps) {
     }
 
     try {
-      await createMutation.mutateAsync({
-        userId,
-        name,
-        price: parseFloat(price),
-        quantity: parseInt(quantity),
-        description,
+      await updateMutation.mutateAsync({
+        id: productId,
+        data: {
+          name,
+          price: parseFloat(price),
+          quantity: parseInt(quantity),
+          description,
+        },
       });
 
       setSuccess(true);
@@ -46,24 +71,32 @@ export default function AddProduct({ userId }: AddProductProps) {
     }
   };
 
+  if (isLoadingProduct) return <div className="loading">Duke ngarkuar...</div>;
+  if (unauthorized)
+    return (
+      <div className="error-message">
+        Ju nuk keni të drejtë të ndryshoni këtë produkt.
+      </div>
+    );
+
   return (
     <div className="product-form-container">
       <Link to="/farmer/dashboard" className="back-link">
         ← Kthehu te Paneli
       </Link>
 
-      <h1>Shto Produkt të Ri</h1>
+      <h1>Ndrysho Produktin</h1>
 
-      {createMutation.error && (
+      {updateMutation.error && (
         <div className="error-message">
-          {createMutation.error instanceof Error
-            ? createMutation.error.message
-            : "Gabim në shtimin e produktit"}
+          {updateMutation.error instanceof Error
+            ? updateMutation.error.message
+            : "Gabim në përditësimin e produktit"}
         </div>
       )}
 
       {success && (
-        <div className="success-message">Produkti u shtua me sukses!</div>
+        <div className="success-message">Produkti u përditësua me sukses!</div>
       )}
 
       <form onSubmit={handleSubmit} className="product-form">
@@ -120,9 +153,11 @@ export default function AddProduct({ userId }: AddProductProps) {
         <button
           type="submit"
           className="submit-button"
-          disabled={createMutation.isPending}
+          disabled={updateMutation.isPending}
         >
-          {createMutation.isPending ? "Duke shtuar..." : "Shto Produktin"}
+          {updateMutation.isPending
+            ? "Duke përditësuar..."
+            : "Përditëso Produktin"}
         </button>
       </form>
     </div>

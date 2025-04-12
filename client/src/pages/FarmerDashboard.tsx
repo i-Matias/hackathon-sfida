@@ -1,84 +1,30 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import "../styles/Dashboard.css";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  description: string;
-}
+import { useProducts } from "../hooks/useProducts";
 
 interface FarmerDashboardProps {
   userId: number;
 }
 
 export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { useUserProducts, useDeleteProduct } = useProducts();
 
-  useEffect(() => {
-    // Fetch farmer's products
-    const fetchProducts = async () => {
-      try {
-        // In a real app, this would use actual API
-        // const response = await fetch(`http://localhost:3000/products/user?userId=${userId}`);
-        // const data = await response.json();
+  const { data, isLoading, error } = useUserProducts(userId);
+  const products = data?.products || [];
 
-        // Mock data for demo
-        const mockProducts = [
-          {
-            id: 1,
-            name: "Domate Bio",
-            price: 2.5,
-            quantity: 50,
-            description: "Domate organike të kultivuara në Serra",
-          },
-          {
-            id: 2,
-            name: "Ullinj",
-            price: 5.0,
-            quantity: 30,
-            description: "Ullinj të freskët direkt nga pemët tona",
-          },
-          {
-            id: 3,
-            name: "Verë Shtëpie",
-            price: 8.0,
-            quantity: 10,
-            description: "Verë e kuqe e prodhuar në shtëpi",
-          },
-        ];
-
-        setProducts(mockProducts);
-      } catch (err) {
-        setError("Gabim në ngarkim të produkteve");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [userId]);
+  const deleteMutation = useDeleteProduct();
 
   const handleDelete = async (productId: number) => {
     try {
-      // In a real app, this would call an actual API
-      // await fetch(`http://localhost:3000/products/${productId}`, {
-      //   method: "DELETE",
-      // });
-
-      // Update UI by removing the deleted product
-      setProducts(products.filter((product) => product.id !== productId));
+      await deleteMutation.mutateAsync(productId);
     } catch (err) {
-      setError("Gabim në fshirjen e produktit");
+      // Error handling can be improved
+      console.error("Failed to delete product:", err);
     }
   };
 
-  if (loading) return <div className="loading">Duke ngarkuar...</div>;
+  if (isLoading) return <div className="loading">Duke ngarkuar...</div>;
 
   return (
     <div className="dashboard-container">
@@ -89,7 +35,12 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
         </Link>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">Gabim në ngarkim të produkteve</div>
+      )}
+      {deleteMutation.error && (
+        <div className="error-message">Gabim në fshirjen e produktit</div>
+      )}
 
       <section className="dashboard-section">
         <h2>Produktet e Mia</h2>
@@ -100,7 +51,7 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
           </p>
         ) : (
           <div className="products-grid">
-            {products.map((product) => (
+            {products.map((product: any) => (
               <ProductCard
                 key={product.id}
                 product={product}

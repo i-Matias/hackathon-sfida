@@ -1,52 +1,41 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Auth.css";
+import { useAuthStore } from "../stores/authStore";
 
-interface LoginProps {
-  onLogin: (user: { id: number; role: string }) => void;
-}
-
-export default function Login({ onLogin }: LoginProps) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if we have a redirect path from a previous navigation attempt
+  const from =
+    location.state?.from?.pathname ||
+    (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
+
+  const { login, isLoading, error, clearError } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    clearError();
+
+    if (!email || !password) {
+      return; // Form validation should handle this
+    }
 
     try {
-      // In a real app, this would call an actual API
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          roleId: role === "farmer" ? 1 : 2,
-        }),
+      await login({
+        email,
+        password,
+        roleId: role === "farmer" ? 1 : 2,
       });
 
-      // Mock successful login for demo purpose
-      if (email && password) {
-        const user = {
-          id: 1,
-          role: role,
-        };
-
-        onLogin(user);
-        navigate(
-          role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard"
-        );
-      } else {
-        setError("Të gjitha fushat janë të detyrueshme");
-      }
+      // Navigate to the intended destination or default dashboard based on role
+      navigate(from, { replace: true });
     } catch (err) {
-      setError("Gabim në hyrje. Ju lutemi provoni përsëri.");
+      // Error is handled in the store
     }
   };
 
@@ -108,8 +97,8 @@ export default function Login({ onLogin }: LoginProps) {
             </div>
           </div>
 
-          <button type="submit" className="auth-button">
-            Hyr
+          <button type="submit" className="auth-button" disabled={isLoading}>
+            {isLoading ? "Duke u identifikuar..." : "Hyr"}
           </button>
         </form>
 

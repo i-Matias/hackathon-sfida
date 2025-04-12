@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import {
   Navigate,
   Route,
@@ -8,6 +8,7 @@ import {
 import "./App.css";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import { PrivateRoute, PublicRoute } from "./components/RouteGuard";
 import AddProduct from "./pages/AddProduct";
 import ConsumerDashboard from "./pages/ConsumerDashboard";
 import FarmerDashboard from "./pages/FarmerDashboard";
@@ -16,69 +17,136 @@ import Login from "./pages/Login";
 import ProductDetail from "./pages/ProductDetail";
 import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
+import { useAuthStore } from "./stores/authStore";
+import EditProduct from "./pages/EditProduct";
+import axios from "./api/axios";
 
 export default function App() {
-  // Simple auth state - in a real app, this would use context/redux
-  const [user, setUser] = useState<{ id: number; role: string } | null>(null);
+  const { user, logout, setUser } = useAuthStore();
 
-  // Mock login function - in a real app this would use proper auth
-  const handleLogin = (userData: { id: number; role: string }) => {
-    setUser(userData);
+  // Check for stored token on app load
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("authToken");
+
+      // If there's a token but no user in state, try to restore the session
+      if (token && !user) {
+        try {
+          // Make a request to verify the token is still valid
+          const response = await axios.get("/auth/me");
+          if (response.data.user) {
+            setUser(response.data.user);
+          }
+        } catch (error) {
+          // If token is invalid, clear it
+          localStorage.removeItem("authToken");
+        }
+      }
+    };
+
+    checkAuth();
+  }, [user, setUser]);
+
+  // Helper function to determine role
+  const getRole = () => {
+    if (!user) return null;
+    return user.roleId === 1 ? "farmer" : "customer";
   };
 
-  // Mock logout function
-  const handleLogout = () => {
-    setUser(null);
-  };
+  const role = getRole();
 
   return (
     <Router>
       <div className="app-container">
-        <Header user={user} onLogout={handleLogout} />
+        <Header
+          user={user ? { id: user.id, role: role! } : null}
+          onLogout={logout}
+        />
 
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            {/* Public routes */}
+            <Route
+              path="/"
+              element={
+                <PublicRoute>
+                  <Home />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute restricted>
+                  <Login />
+                </PublicRoute>
+              }
+            />
             <Route
               path="/register"
-              element={<Register onLogin={handleLogin} />}
+              element={
+                <PublicRoute restricted>
+                  <Register />
+                </PublicRoute>
+              }
             />
+            <Route
+              path="/products"
+              element={
+                <PublicRoute>
+                  <ProductList />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/products/:id"
+              element={
+                <PublicRoute>
+                  <ProductDetail
+                    user={user ? { id: user.id, role: role! } : null}
+                  />
+                </PublicRoute>
+              }
+            />
+
+            {/* Farmer Private Routes */}
             <Route
               path="/farmer/dashboard"
               element={
-                user && user.role === "farmer" ? (
-                  <FarmerDashboard userId={user.id} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <PrivateRoute requiredRole="farmer">
+                  <FarmerDashboard userId={user?.id || 0} />
+                </PrivateRoute>
               }
             />
             <Route
               path="/farmer/add-product"
               element={
-                user && user.role === "farmer" ? (
-                  <AddProduct userId={user.id} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <PrivateRoute requiredRole="farmer">
+                  <AddProduct userId={user?.id || 0} />
+                </PrivateRoute>
               }
             />
+            <Route
+              path="/farmer/edit-product/:id"
+              element={
+                <PrivateRoute requiredRole="farmer">
+                  <EditProduct userId={user?.id || 0} />
+                </PrivateRoute>
+              }
+            />
+
+            {/* Customer Private Routes */}
             <Route
               path="/consumer/dashboard"
               element={
-                user && user.role === "customer" ? (
-                  <ConsumerDashboard userId={user.id} />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <PrivateRoute requiredRole="customer">
+                  <ConsumerDashboard userId={user?.id || 0} />
+                </PrivateRoute>
               }
             />
-            <Route path="/products" element={<ProductList />} />
-            <Route
-              path="/products/:id"
-              element={<ProductDetail user={user} />}
-            />
+
+            {/* Fallback - redirect to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
 

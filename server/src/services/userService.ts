@@ -13,6 +13,12 @@ const login = async (email: string, password: string) => {
   return user;
 };
 
+const getUserByEmail = async (email: string) => {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+};
+
 const register = async (
   email: string,
   password: string,
@@ -31,7 +37,15 @@ const register = async (
   return user;
 };
 
+const getUserById = async (id: number) => {
+  return prisma.user.findUnique({
+    where: { id },
+  });
+};
+
 export default {
   login,
   register,
+  getUserByEmail,
+  getUserById,
 };

@@ -1,66 +1,16 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Dashboard.css";
-
-interface Request {
-  id: number;
-  productId: number;
-  productName: string;
-  quantity: number;
-  status: string;
-  requestedAt: string;
-  farmerName: string;
-}
+import { useRequests } from "../hooks/useRequests";
 
 interface ConsumerDashboardProps {
   userId: number;
 }
 
 export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
-  const [requests, setRequests] = useState<Request[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { useUserRequests } = useRequests();
 
-  useEffect(() => {
-    // Fetch consumer's requests
-    const fetchRequests = async () => {
-      try {
-        // In a real app, this would use actual API
-        // const response = await fetch(`http://localhost:3000/requests?customerId=${userId}`);
-        // const data = await response.json();
-
-        // Mock data for demo
-        const mockRequests = [
-          {
-            id: 1,
-            productId: 1,
-            productName: "Domate Bio",
-            quantity: 5,
-            status: "pending",
-            requestedAt: "2025-04-13",
-            farmerName: "Agron Fermer",
-          },
-          {
-            id: 2,
-            productId: 3,
-            productName: "Verë Shtëpie",
-            quantity: 2,
-            status: "approved",
-            requestedAt: "2025-04-10",
-            farmerName: "Blerta Vreshtare",
-          },
-        ];
-
-        setRequests(mockRequests);
-      } catch (err) {
-        setError("Gabim në ngarkim të kërkesave");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRequests();
-  }, [userId]);
+  const { data, isLoading, error } = useUserRequests(userId);
+  const requests = data?.requests || [];
 
   const getStatusLabel = (status: string) => {
     switch (status) {
@@ -75,7 +25,7 @@ export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
     }
   };
 
-  if (loading) return <div className="loading">Duke ngarkuar...</div>;
+  if (isLoading) return <div className="loading">Duke ngarkuar...</div>;
 
   return (
     <div className="dashboard-container">
@@ -86,7 +36,9 @@ export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
         </Link>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message">Gabim në ngarkim të kërkesave</div>
+      )}
 
       <section className="dashboard-section">
         <h2>Kërkesat e Mia</h2>
@@ -109,12 +61,14 @@ export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
                 </tr>
               </thead>
               <tbody>
-                {requests.map((request) => (
+                {requests.map((request: any) => (
                   <tr key={request.id}>
-                    <td>{request.productName}</td>
+                    <td>{request.product.name}</td>
                     <td>{request.quantity}</td>
-                    <td>{request.farmerName}</td>
-                    <td>{request.requestedAt}</td>
+                    <td>{request.product.user.username}</td>
+                    <td>
+                      {new Date(request.requestedAt).toLocaleDateString()}
+                    </td>
                     <td>{getStatusLabel(request.status)}</td>
                     <td>
                       <Link
