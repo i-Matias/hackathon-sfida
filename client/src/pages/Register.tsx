@@ -92,6 +92,7 @@ export default function Register() {
                   checked={role === "farmer"}
                   onChange={() => setRole("farmer")}
                 />
+                &nbsp;
                 {t("auth.farmer")}
               </label>
               <label>
@@ -102,6 +103,7 @@ export default function Register() {
                   checked={role === "customer"}
                   onChange={() => setRole("customer")}
                 />
+                &nbsp;
                 {t("auth.customer")}
               </label>
             </div>

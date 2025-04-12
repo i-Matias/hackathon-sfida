@@ -7,7 +7,7 @@
 
 .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
@@ -18,25 +18,79 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 120px;
     font-size: 18px;
     color: #666;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .error-message {
-    background-color: #ffeeee;
-    color: #cc0000;
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin: 10px 0;
-    border-left: 4px solid #cc0000;
+    background-color: #fff5f5;
+    color: #e53e3e;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    border-left: 4px solid #e53e3e;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(229, 62, 62, 0.1);
 }
 
 .success-message {
-    background-color: #eeffee;
-    color: #008800;
-    padding: 10px 15px;
+    background-color: #f0fff4;
+    color: #38a169;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    border-left: 4px solid #38a169;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(56, 161, 105, 0.1);
+}
+
+/* Improved buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
     border-radius: 4px;
-    margin: 10px 0;
-    border-left: 4px solid #008800;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #2a762c;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #225f23;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+    background-color: #f8f9fa;
+    color: #2a762c;
+    border: 1px solid #2a762c;
+}
+
+.btn-secondary:hover {
+    background-color: #e8f5e9;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        padding: 20px 16px;
+    }
 }

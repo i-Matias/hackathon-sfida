@@ -1,62 +1,72 @@
 .product-detail-container {
-    padding: 20px 0;
-    max-width: 800px;
+    padding: 30px 0;
+    max-width: 850px;
     margin: 0 auto;
 }
 
 .back-link {
-    display: inline-block;
-    color: #555;
-    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    color: #4a5568;
+    margin-bottom: 25px;
     font-weight: 500;
     text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background-color: #f7fafc;
 }
 
 .back-link:hover {
     color: #2a762c;
-    text-decoration: underline;
+    background-color: #f0f9f0;
+    transform: translateX(-5px);
 }
 
 .product-detail-content {
     display: flex;
     flex-direction: column;
     background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .product-info {
-    padding: 30px;
+    padding: 35px;
 }
 
 .product-info h1 {
-    color: #333;
-    margin-bottom: 15px;
+    color: #2d3748;
+    margin-bottom: 20px;
     font-size: 28px;
+    line-height: 1.3;
 }
 
 .product-description {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 25px;
+    color: #4a5568;
+    line-height: 1.7;
+    margin-bottom: 30px;
+    font-size: 16px;
 }
 
 .product-details {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 30px;
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 6px;
+    gap: 14px;
+    margin-bottom: 35px;
+    background-color: #f7fafc;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 }
 
 .detail-item {
     display: flex;
     justify-content: space-between;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
     font-size: 16px;
 }
 
@@ -66,12 +76,12 @@
 }
 
 .detail-item span:first-child {
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    color: #4a5568;
 }
 
 .owner-actions {
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 .edit-button {
@@ -79,23 +89,25 @@
     background-color: #f0f9f0;
     color: #2a762c;
     border: 1px solid #2a762c;
-    padding: 10px 16px;
-    border-radius: 4px;
-    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: 600;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .edit-button:hover {
     background-color: #e0f0e0;
-    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(42, 118, 44, 0.1);
 }
 
 .request-form {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 6px;
+    margin-top: 25px;
+    padding: 25px;
+    background-color: #f7fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 }
 
 .request-button {
@@ -103,38 +115,58 @@
     background-color: #2a762c;
     color: white;
     border: none;
-    padding: 12px;
-    border-radius: 4px;
+    padding: 14px;
+    border-radius: 6px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 15px;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .request-button:hover {
     background-color: #225f23;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .login-to-request-button {
     display: block;
     text-align: center;
-    background-color: #f0f0f0;
-    color: #555;
-    padding: 12px;
-    border-radius: 4px;
-    margin-top: 20px;
+    background-color: #f7fafc;
+    color: #4a5568;
+    padding: 14px;
+    border-radius: 6px;
+    margin-top: 25px;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid #e2e8f0;
 }
 
 .login-to-request-button:hover {
-    background-color: #e0e0e0;
-    text-decoration: none;
+    background-color: #edf2f7;
+    color: #2a762c;
+    border-color: #2a762c;
 }
 
 @media (max-width: 768px) {
     .product-detail-content {
+        padding: 0;
+    }
+
+    .product-info {
+        padding: 25px 20px;
+    }
+
+    .product-details {
+        padding: 15px;
+    }
+
+    .request-form {
         padding: 20px;
     }
 }

@@ -14,14 +14,17 @@ body {
 a {
     text-decoration: none;
     color: #2a762c;
+    transition: color 0.2s ease;
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    color: #1e5b21;
 }
 
 button {
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 h1,
@@ -32,6 +35,7 @@ h5,
 h6 {
     margin-bottom: 0.5em;
     font-weight: 600;
+    line-height: 1.3;
 }
 
 input,
@@ -39,4 +43,23 @@ textarea,
 select {
     font-family: inherit;
     font-size: inherit;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
 }
