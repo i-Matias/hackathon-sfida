@@ -1,17 +1,37 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-interface AuthState {
-  isAuthenticated: boolean;
-  role: "fermer" | "konsumator" | null;
-  email: string | null;
-  login: (role: "fermer" | "konsumator", email: string) => void;
-  logout: () => void;
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  isAuthenticated: false,
-  role: null,
-  email: null,
-  login: (role, email) => set({ isAuthenticated: true, role, email }),
-  logout: () => set({ isAuthenticated: false, role: null, email: null }),
-}));
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  login: (userData: User) => void;
+  logout: () => void;
+  role: string | null;
+}
+
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      isAuthenticated: false,
+      role: null,
+      login: (userData) =>
+        set({
+          user: userData,
+          isAuthenticated: true,
+          role: userData.role,
+        }),
+      logout: () => set({ user: null, isAuthenticated: false, role: null }),
+    }),
+    {
+      name: "auth-storage",
+    }
+  )
+);

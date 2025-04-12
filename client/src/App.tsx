@@ -1,53 +1,42 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PublicRoute from "./routes/publicRoute";
-import Home from "./pages/home";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./routes/privateRoute";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
-import Dashboard from "./pages/dashboard";
+import AdminDashboard from "./pages/admin";
+import FarmerDashboard from "./pages/product";
 import ConsumerProducts from "./pages/consumerProducts";
+import { useAuthStore } from "./stores/useAuthStore";
+
+function DashboardWrapper() {
+  const { role } = useAuthStore();
+
+  if (role === "admin") {
+    return <AdminDashboard />;
+  } else if (role === "farmer") {
+    return <FarmerDashboard />;
+  } else if (role === "consumer") {
+    return <ConsumerProducts />;
+  } else {
+    return <Navigate to="/login" replace />;
+  }
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-
-        <Route
-          path="/signup"
-          element={
-            <PublicRoute>
-              <Signup />
-            </PublicRoute>
-          }
-        />
-
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <DashboardWrapper />
             </PrivateRoute>
           }
         />
-
-        <Route
-          path="/products"
-          element={
-            <PublicRoute>
-              <ConsumerProducts />
-            </PublicRoute>
-          }
-        />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );

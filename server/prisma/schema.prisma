@@ -8,13 +8,40 @@ datasource db {
 }
 
 model User {
-    id    Int    @id @default(autoincrement())
-    email String @unique
-    role  String
+  id       Int              @id @default(autoincrement())
+  username String
+  email    String           @unique
+  password String
+  roleId   Int
+  role     Role             @relation(fields: [roleId], references: [id])
+  products Product[]
+  requests ProductRequest[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
 }
 
 model Product {
-    id          Int    @id @default(autoincrement())
-    name        String
-    description String
+  id          Int              @id @default(autoincrement())
+  name        String
+  price       Float
+  quantity    Int
+  description String
+  userId      Int
+  user        User             @relation(fields: [userId], references: [id])
+  requests    ProductRequest[]
+}
+
+model ProductRequest {
+  id          Int      @id @default(autoincrement())
+  customerId  Int
+  productId   Int
+  quantity    Int
+  status      String
+  requestedAt DateTime @default(now())
+  customer    User     @relation(fields: [customerId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
 }

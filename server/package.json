@@ -6,8 +6,7 @@
     "dev": "npm run migrate_dev && nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "migrate_prod": "npx prisma migrate deploy",
-    "migrate_dev": "npx prisma migrate dev",
-    "new-seed": "node create-seed.js"
+    "migrate_dev": "npx prisma migrate dev"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
