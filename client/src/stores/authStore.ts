@@ -1,5 +1,16 @@
 import { create } from "zustand";
 import { User, authApi, LoginCredentials, RegisterData } from "../api/authApi";
+import { QueryClient } from "@tanstack/react-query";
+
+// Create a singleton QueryClient that can be imported where needed
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 interface AuthState {
   user: User | null;
@@ -69,6 +80,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     // First remove the token from localStorage
     localStorage.removeItem("authToken");
+
+    // Clear relevant cached queries from the queryClient
+    queryClient.removeQueries({ queryKey: ["userProducts"] });
+    queryClient.removeQueries({ queryKey: ["userRequests"] });
+    queryClient.removeQueries({ queryKey: ["farmerRequests"] });
 
     // Then reset the entire state to ensure no user data remains
     set({

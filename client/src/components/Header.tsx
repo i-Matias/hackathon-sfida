@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 
 interface HeaderProps {
@@ -7,6 +7,13 @@ interface HeaderProps {
 }
 
 export default function Header({ user, onLogout }: HeaderProps) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();
+    navigate("/"); // Redirect to home page
+  };
+
   return (
     <header className="header">
       <div className="header-container">
@@ -15,16 +22,19 @@ export default function Header({ user, onLogout }: HeaderProps) {
         </Link>
 
         <nav className="nav-links">
-          <Link to="/products">Produktet</Link>
-
           {user ? (
             <>
+              {/* Only show Products link to customers */}
+              {user.role === "customer" && (
+                <Link to="/products">Produktet</Link>
+              )}
+
               {user.role === "farmer" ? (
                 <Link to="/farmer/dashboard">Paneli Im</Link>
               ) : (
                 <Link to="/consumer/dashboard">Paneli Im</Link>
               )}
-              <button onClick={onLogout} className="logout-button">
+              <button onClick={handleLogout} className="logout-button">
                 Dilni
               </button>
             </>

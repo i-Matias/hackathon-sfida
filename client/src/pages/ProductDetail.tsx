@@ -75,10 +75,6 @@ export default function ProductDetail({ user }: ProductDetailProps) {
       )}
 
       <div className="product-detail-content">
-        <div className="product-image-placeholder">
-          <span>Fotoja e Produktit</span>
-        </div>
-
         <div className="product-info">
           <h1>{product.name}</h1>
           <p className="product-description">{product.description}</p>

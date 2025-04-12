@@ -13,6 +13,15 @@ export const useRequests = () => {
     });
   };
 
+  // Get farmer requests
+  const useFarmerRequests = (farmerId: number) => {
+    return useQuery({
+      queryKey: ["farmerRequests", farmerId],
+      queryFn: () => requestApi.getFarmerRequests(farmerId),
+      enabled: !!farmerId, // Only run if farmerId is provided
+    });
+  };
+
   // Create request mutation
   const useCreateRequest = () => {
     return useMutation({
@@ -21,6 +30,7 @@ export const useRequests = () => {
       onSuccess: () => {
         // Invalidate user requests query
         queryClient.invalidateQueries({ queryKey: ["userRequests"] });
+        queryClient.invalidateQueries({ queryKey: ["farmerRequests"] });
       },
     });
   };
@@ -33,12 +43,14 @@ export const useRequests = () => {
       onSuccess: () => {
         // Invalidate user requests query
         queryClient.invalidateQueries({ queryKey: ["userRequests"] });
+        queryClient.invalidateQueries({ queryKey: ["farmerRequests"] });
       },
     });
   };
 
   return {
     useUserRequests,
+    useFarmerRequests,
     useCreateRequest,
     useUpdateRequestStatus,
   };

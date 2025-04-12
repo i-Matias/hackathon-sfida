@@ -30,10 +30,6 @@ export default function ProductCard({
 
   return (
     <div className="product-card">
-      <div className="product-image-placeholder">
-        <span>{product.name.charAt(0)}</span>
-      </div>
-
       <div className="product-content">
         <h3 className="product-name">{product.name}</h3>
         <p className="product-description">

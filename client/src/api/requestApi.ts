@@ -13,6 +13,11 @@ export interface ProductRequest {
       username: string;
     };
   };
+  customer?: {
+    id: number;
+    username: string;
+    email: string;
+  };
 }
 
 export interface RequestFormData {
@@ -25,6 +30,11 @@ export interface RequestFormData {
 export const requestApi = {
   getUserRequests: async (customerId: number) => {
     const response = await axios.get("/requests", { params: { customerId } });
+    return response.data;
+  },
+
+  getFarmerRequests: async (farmerId: number) => {
+    const response = await axios.get("/requests/farmer");
     return response.data;
   },
 

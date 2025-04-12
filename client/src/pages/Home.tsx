@@ -19,16 +19,13 @@ export default function Home() {
               Shiko produktet
             </Link>
           ) : (
-            // Show all buttons when logged out
+            // Show only login and register buttons when logged out
             <>
               <Link to="/login" className="cta-button">
                 Hyr
               </Link>
               <Link to="/register" className="cta-button secondary">
                 Regjistrohu
-              </Link>
-              <Link to="/products" className="cta-button outline">
-                Shiko produktet
               </Link>
             </>
           )}
