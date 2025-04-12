@@ -43,9 +43,17 @@ const getUserById = async (id: number) => {
   });
 };
 
+const updateUser = async (userId: number, data: any) => {
+  return prisma.user.update({
+    where: { id: userId },
+    data,
+  });
+};
+
 export default {
   login,
   register,
   getUserByEmail,
   getUserById,
+  updateUser,
 };

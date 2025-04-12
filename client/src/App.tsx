@@ -17,6 +17,7 @@ import Login from "./pages/Login";
 import ProductDetail from "./pages/ProductDetail";
 import ProductList from "./pages/ProductList";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 import { useAuthStore } from "./stores/authStore";
 import EditProduct from "./pages/EditProduct";
 import axios from "./api/axios";
@@ -111,6 +112,16 @@ export default function App() {
                       user={user ? { id: user.id, role: role! } : null}
                     />
                   </PublicRoute>
+                }
+              />
+
+              {/* Common Private Routes */}
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
                 }
               />
 

@@ -41,6 +41,10 @@ export default function Header({ user, onLogout }: HeaderProps) {
               ) : (
                 <Link to="/consumer/dashboard">{t("nav.dashboard")}</Link>
               )}
+
+              {/* Add Profile link */}
+              <Link to="/profile">{t("nav.profile")}</Link>
+
               <button onClick={handleLogout} className="logout-button">
                 {t("nav.logout")}
               </button>

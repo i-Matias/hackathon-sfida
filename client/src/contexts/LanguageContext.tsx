@@ -27,6 +27,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Hyr",
     "nav.register": "Regjistrohu",
     "nav.logout": "Dilni",
+    "nav.profile": "Profili Im",
 
     // Home
     "home.title": "MerrBio",
@@ -163,6 +164,29 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Language toggle
     language: "Shqip",
+
+    // Profile Page
+    "profile.title": "Profili Im",
+    "profile.personalInfo": "Informacioni Personal",
+    "profile.username": "Emri i përdoruesit",
+    "profile.email": "Email",
+    "profile.role": "Roli",
+    "profile.changePassword": "Ndrysho Fjalëkalimin",
+    "profile.currentPassword": "Fjalëkalimi aktual",
+    "profile.newPassword": "Fjalëkalimi i ri",
+    "profile.confirmPassword": "Konfirmo fjalëkalimin",
+    "profile.saveChanges": "Ruaj Ndryshimet",
+    "profile.saving": "Duke ruajtur...",
+    "profile.updateSuccess": "Profili u përditësua me sukses!",
+    "profile.updateError": "Gabim në përditësimin e profilit",
+    "profile.notFound": "Profili nuk u gjet",
+    "profile.passwordInfo":
+      "Plotëso fushën e fjalëkalimit vetëm nëse dëshiron ta ndryshosh.",
+    "profile.passwordMismatch": "Fjalëkalimet nuk përputhen",
+    "profile.passwordTooShort":
+      "Fjalëkalimi duhet të jetë të paktën 6 karaktere",
+    "profile.currentPasswordRequired":
+      "Kërkohet fjalëkalimi aktual për të ndryshuar fjalëkalimin",
   },
   en: {
     // Header
@@ -171,6 +195,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.login": "Login",
     "nav.register": "Register",
     "nav.logout": "Logout",
+    "nav.profile": "My Profile",
 
     // Home
     "home.title": "MerrBio",
@@ -306,6 +331,28 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Language toggle
     language: "English",
+
+    // Profile Page
+    "profile.title": "My Profile",
+    "profile.personalInfo": "Personal Information",
+    "profile.username": "Username",
+    "profile.email": "Email",
+    "profile.role": "Role",
+    "profile.changePassword": "Change Password",
+    "profile.currentPassword": "Current Password",
+    "profile.newPassword": "New Password",
+    "profile.confirmPassword": "Confirm Password",
+    "profile.saveChanges": "Save Changes",
+    "profile.saving": "Saving...",
+    "profile.updateSuccess": "Profile updated successfully!",
+    "profile.updateError": "Error updating profile",
+    "profile.notFound": "Profile not found",
+    "profile.passwordInfo":
+      "Fill in the password fields only if you want to change your password.",
+    "profile.passwordMismatch": "Passwords don't match",
+    "profile.passwordTooShort": "Password must be at least 6 characters",
+    "profile.currentPasswordRequired":
+      "Current password is required to change password",
   },
 };
 

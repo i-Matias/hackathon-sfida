@@ -16,16 +16,22 @@ export default function Home() {
           {user ? (
             // Show appropriate buttons when logged in
             <>
-              <Link
-                to={user.roleId === 2 ? "/products" : "/farmer/dashboard"}
-                className="cta-button"
-              >
-                {user.roleId === 2
-                  ? t("home.viewProducts")
-                  : t("home.viewDashboard")}
-              </Link>
-              {user.roleId === 2 && (
-                <Link to="/consumer/dashboard" className="cta-button">
+              {user.roleId === 2 ? (
+                // For customers show Products and Dashboard
+                <>
+                  <Link to="/products" className="cta-button">
+                    {t("home.viewProducts")}
+                  </Link>
+                  <Link
+                    to="/consumer/dashboard"
+                    className="cta-button secondary"
+                  >
+                    {t("home.viewDashboard")}
+                  </Link>
+                </>
+              ) : (
+                // For farmers show just Dashboard
+                <Link to="/farmer/dashboard" className="cta-button">
                   {t("home.viewDashboard")}
                 </Link>
               )}

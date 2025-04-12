@@ -1,0 +1,163 @@
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.profile-container h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.profile-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.form-section {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h2 {
+    color: #2a762c;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2a762c;
+}
+
+.role-info {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.role-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.role-value {
+    color: #2a762c;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.password-info {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.password-error {
+    color: #cc0000;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-button {
+    background-color: #2a762c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.save-button:hover {
+    background-color: #225f23;
+}
+
+.save-button:disabled {
+    background-color: #88b88a;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        padding: 20px;
+    }
+}
+
+/* Read-only profile styles */
+.profile-form.read-only {
+    gap: 15px;
+}
+
+.profile-field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-field label {
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.field-value {
+    font-size: 16px;
+    padding: 8px 0;
+    color: #333;
+}
+
+@media (min-width: 768px) {
+    .profile-field {
+        flex-direction: row;
+        align-items: baseline;
+    }
+
+    .profile-field label {
+        width: 120px;
+        margin-bottom: 0;
+    }
+
+    .field-value {
+        flex: 1;
+    }
+}
