@@ -8,35 +8,46 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
+  const [roleError, setRoleError] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   // Check if we have a redirect path from a previous navigation attempt
-  const from =
-    location.state?.from?.pathname ||
-    (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
+  // const from =
+  //   location.state?.from?.pathname ||
+  //   (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
 
   const { t } = useLanguage();
 
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError, logout } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     clearError();
+    setRoleError(null);
 
     if (!email || !password) {
       return; // Form validation should handle this
     }
 
     try {
-      await login({
+      const user = await login({
         email,
         password,
-        roleId: role === "farmer" ? 1 : 2,
       });
 
+      // After login, check if the user's actual role matches the selected role
+      const selectedRoleId = role === "farmer" ? 1 : 2;
+
+      if (user && user.roleId !== selectedRoleId) {
+        // If role doesn't match, logout and show error
+        logout();
+        setRoleError(t("auth.incorrectRole"));
+        return;
+      }
+
       // Navigate to the intended destination or default dashboard based on role
-      navigate(from, { replace: true });
+      navigate("/");
     } catch (err) {
       // Error is handled in the store
     }
@@ -48,6 +59,7 @@ export default function Login() {
         <h2>{t("auth.loginTitle")}</h2>
 
         {error && <div className="error-message">{error}</div>}
+        {roleError && <div className="error-message">{roleError}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
