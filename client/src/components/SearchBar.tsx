@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../styles/SearchBar.css";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface SearchBarProps {
   onSearch: (term: string) => void;
@@ -7,6 +8,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const { t } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,11 +20,11 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Kërko produkte..."
+          placeholder={t("products.search")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button type="submit">Kërko</button>
+        <button type="submit">{t("products.searchButton")}</button>
       </form>
     </div>
   );

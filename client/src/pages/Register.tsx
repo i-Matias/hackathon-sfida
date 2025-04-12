@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
 import { useAuthStore } from "../stores/authStore";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -9,6 +10,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("customer");
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { register, isLoading, error, clearError } = useAuthStore();
 
@@ -38,49 +40,49 @@ export default function Register() {
   return (
     <div className="auth-container">
       <div className="auth-form-container">
-        <h2>Regjistrohu në MerrBio</h2>
+        <h2>{t("auth.registerTitle")}</h2>
 
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">Emri i përdoruesit</label>
+            <label htmlFor="username">{t("auth.username")}</label>
             <input
               type="text"
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Emri juaj"
+              placeholder={t("auth.usernamePlaceholder")}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">{t("auth.email")}</label>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="juaji@email.com"
+              placeholder={t("auth.emailPlaceholder")}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Fjalëkalimi</label>
+            <label htmlFor="password">{t("auth.password")}</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Fjalëkalimi juaj"
+              placeholder={t("auth.passwordPlaceholder")}
               required
             />
           </div>
 
           <div className="form-group">
-            <label>Roli</label>
+            <label>{t("auth.role")}</label>
             <div className="role-selection">
               <label>
                 <input
@@ -90,7 +92,7 @@ export default function Register() {
                   checked={role === "farmer"}
                   onChange={() => setRole("farmer")}
                 />
-                Fermer
+                {t("auth.farmer")}
               </label>
               <label>
                 <input
@@ -100,18 +102,18 @@ export default function Register() {
                   checked={role === "customer"}
                   onChange={() => setRole("customer")}
                 />
-                Konsumator
+                {t("auth.customer")}
               </label>
             </div>
           </div>
 
           <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? "Duke u regjistruar..." : "Regjistrohu"}
+            {isLoading ? t("auth.registering") : t("auth.registerButton")}
           </button>
         </form>
 
         <p className="auth-redirect">
-          Keni tashmë një llogari? <Link to="/login">Hyr</Link>
+          {t("auth.haveAccount")} <Link to="/login">{t("nav.login")}</Link>
         </p>
       </div>
     </div>

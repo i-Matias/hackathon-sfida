@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Auth.css";
 import { useAuthStore } from "../stores/authStore";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,6 +15,8 @@ export default function Login() {
   const from =
     location.state?.from?.pathname ||
     (role === "farmer" ? "/farmer/dashboard" : "/consumer/dashboard");
+
+  const { t } = useLanguage();
 
   const { login, isLoading, error, clearError } = useAuthStore();
 
@@ -42,7 +45,7 @@ export default function Login() {
   return (
     <div className="auth-container">
       <div className="auth-form-container">
-        <h2>Hyr në MerrBio</h2>
+        <h2>{t("auth.loginTitle")}</h2>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -54,25 +57,25 @@ export default function Login() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="juaji@email.com"
+              placeholder={t("auth.emailPlaceholder")}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Fjalëkalimi</label>
+            <label htmlFor="password">{t("auth.passwordPlaceholder")}</label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Fjalëkalimi juaj"
+              placeholder={t("auth.passwordPlaceholder")}
               required
             />
           </div>
 
           <div className="form-group">
-            <label>Roli</label>
+            <label>{t("auth.role")}</label>
             <div className="role-selection">
               <label>
                 <input
@@ -82,7 +85,7 @@ export default function Login() {
                   checked={role === "farmer"}
                   onChange={() => setRole("farmer")}
                 />
-                Fermer
+                {t("auth.farmer")}
               </label>
               <label>
                 <input
@@ -92,18 +95,19 @@ export default function Login() {
                   checked={role === "customer"}
                   onChange={() => setRole("customer")}
                 />
-                Konsumator
+                {t("auth.customer")}
               </label>
             </div>
           </div>
 
           <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? "Duke u identifikuar..." : "Hyr"}
+            {isLoading ? t("auth.loggingIn") : t("auth.loginButton")}
           </button>
         </form>
 
         <p className="auth-redirect">
-          Nuk keni një llogari? <Link to="/register">Regjistrohu</Link>
+          {t("auth.noAccount")}{" "}
+          <Link to="/register">{t("auth.registerButton")}</Link>
         </p>
       </div>
     </div>

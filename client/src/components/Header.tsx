@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface HeaderProps {
   user: { id: number; role: string } | null;
@@ -8,10 +9,16 @@ interface HeaderProps {
 
 export default function Header({ user, onLogout }: HeaderProps) {
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useLanguage();
 
   const handleLogout = () => {
     onLogout();
-    navigate("/"); // Redirect to home page
+    navigate("/");
+  };
+
+  const toggleLanguage = () => {
+    const newLanguage = language === "sq" ? "en" : "sq";
+    setLanguage(newLanguage);
   };
 
   return (
@@ -26,24 +33,28 @@ export default function Header({ user, onLogout }: HeaderProps) {
             <>
               {/* Only show Products link to customers */}
               {user.role === "customer" && (
-                <Link to="/products">Produktet</Link>
+                <Link to="/products">{t("nav.products")}</Link>
               )}
 
               {user.role === "farmer" ? (
-                <Link to="/farmer/dashboard">Paneli Im</Link>
+                <Link to="/farmer/dashboard">{t("nav.dashboard")}</Link>
               ) : (
-                <Link to="/consumer/dashboard">Paneli Im</Link>
+                <Link to="/consumer/dashboard">{t("nav.dashboard")}</Link>
               )}
               <button onClick={handleLogout} className="logout-button">
-                Dilni
+                {t("nav.logout")}
               </button>
             </>
           ) : (
             <>
-              <Link to="/login">Hyr</Link>
-              <Link to="/register">Regjistrohu</Link>
+              {/* <Link to="/products">{t("nav.products")}</Link> */}
+              <Link to="/login">{t("nav.login")}</Link>
+              <Link to="/register">{t("nav.register")}</Link>
             </>
           )}
+          <button onClick={toggleLanguage} className="language-toggle">
+            {t("language")}
+          </button>
         </nav>
       </div>
     </header>

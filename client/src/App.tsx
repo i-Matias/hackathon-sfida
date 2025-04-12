@@ -20,6 +20,7 @@ import Register from "./pages/Register";
 import { useAuthStore } from "./stores/authStore";
 import EditProduct from "./pages/EditProduct";
 import axios from "./api/axios";
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 export default function App() {
   const { user, logout, setUser } = useAuthStore();
@@ -59,102 +60,104 @@ export default function App() {
   const role = getRole();
 
   return (
-    <Router>
-      <div className="app-container">
-        <Header
-          user={user ? { id: user.id, role: role! } : null}
-          onLogout={logout}
-        />
+    <LanguageProvider>
+      <Router>
+        <div className="app-container">
+          <Header
+            user={user ? { id: user.id, role: role! } : null}
+            onLogout={logout}
+          />
 
-        <main className="main-content">
-          <Routes>
-            {/* Public routes */}
-            <Route
-              path="/"
-              element={
-                <PublicRoute>
-                  <Home />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <PublicRoute restricted>
-                  <Login />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <PublicRoute restricted>
-                  <Register />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/products"
-              element={
-                <PublicRoute>
-                  <ProductList />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/products/:id"
-              element={
-                <PublicRoute>
-                  <ProductDetail
-                    user={user ? { id: user.id, role: role! } : null}
-                  />
-                </PublicRoute>
-              }
-            />
+          <main className="main-content">
+            <Routes>
+              {/* Public routes */}
+              <Route
+                path="/"
+                element={
+                  <PublicRoute>
+                    <Home />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute restricted>
+                    <Login />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <PublicRoute restricted>
+                    <Register />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/products"
+                element={
+                  <PublicRoute>
+                    <ProductList />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/products/:id"
+                element={
+                  <PublicRoute>
+                    <ProductDetail
+                      user={user ? { id: user.id, role: role! } : null}
+                    />
+                  </PublicRoute>
+                }
+              />
 
-            {/* Farmer Private Routes */}
-            <Route
-              path="/farmer/dashboard"
-              element={
-                <PrivateRoute requiredRole="farmer">
-                  <FarmerDashboard userId={user?.id || 0} />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/farmer/add-product"
-              element={
-                <PrivateRoute requiredRole="farmer">
-                  <AddProduct userId={user?.id || 0} />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/farmer/edit-product/:id"
-              element={
-                <PrivateRoute requiredRole="farmer">
-                  <EditProduct userId={user?.id || 0} />
-                </PrivateRoute>
-              }
-            />
+              {/* Farmer Private Routes */}
+              <Route
+                path="/farmer/dashboard"
+                element={
+                  <PrivateRoute requiredRole="farmer">
+                    <FarmerDashboard userId={user?.id || 0} />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/farmer/add-product"
+                element={
+                  <PrivateRoute requiredRole="farmer">
+                    <AddProduct userId={user?.id || 0} />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/farmer/edit-product/:id"
+                element={
+                  <PrivateRoute requiredRole="farmer">
+                    <EditProduct userId={user?.id || 0} />
+                  </PrivateRoute>
+                }
+              />
 
-            {/* Customer Private Routes */}
-            <Route
-              path="/consumer/dashboard"
-              element={
-                <PrivateRoute requiredRole="customer">
-                  <ConsumerDashboard userId={user?.id || 0} />
-                </PrivateRoute>
-              }
-            />
+              {/* Customer Private Routes */}
+              <Route
+                path="/consumer/dashboard"
+                element={
+                  <PrivateRoute requiredRole="customer">
+                    <ConsumerDashboard userId={user?.id || 0} />
+                  </PrivateRoute>
+                }
+              />
 
-            {/* Fallback - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
+              {/* Fallback - redirect to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
-    </Router>
+          <Footer />
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 }

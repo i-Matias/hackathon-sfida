@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "../styles/ProductCard.css";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface Product {
   id: number;
@@ -23,6 +24,8 @@ export default function ProductCard({
   isOwner,
   onDelete,
 }: ProductCardProps) {
+  const { t } = useLanguage();
+
   const truncateDescription = (text: string, maxLength = 100) => {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
@@ -38,17 +41,19 @@ export default function ProductCard({
 
         <div className="product-details">
           <span className="product-price">{product.price.toFixed(2)} €/kg</span>
-          <span className="product-quantity">Sasia: {product.quantity} kg</span>
+          <span className="product-quantity">
+            {t("product.quantity")}: {product.quantity} kg
+          </span>
           {product.user && (
             <span className="product-farmer">
-              Fermeri: {product.user.username}
+              {t("product.farmer")}: {product.user.username}
             </span>
           )}
         </div>
 
         <div className="product-actions">
           <Link to={`/products/${product.id}`} className="view-button">
-            Shiko Detajet
+            {t("product.viewDetails")}
           </Link>
 
           {isOwner && onDelete && (
@@ -56,7 +61,7 @@ export default function ProductCard({
               className="delete-button"
               onClick={() => onDelete(product.id)}
             >
-              Fshi
+              {t("product.delete")}
             </button>
           )}
         </div>

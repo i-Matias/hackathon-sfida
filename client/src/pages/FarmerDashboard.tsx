@@ -4,6 +4,7 @@ import ProductCard from "../components/ProductCard";
 import "../styles/Dashboard.css";
 import { useProducts } from "../hooks/useProducts";
 import { useRequests } from "../hooks/useRequests";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface FarmerDashboardProps {
   userId: number;
@@ -12,6 +13,7 @@ interface FarmerDashboardProps {
 export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
   const { useUserProducts, useDeleteProduct } = useProducts();
   const { useFarmerRequests, useUpdateRequestStatus } = useRequests();
+  const { t } = useLanguage();
 
   const [activeTab, setActiveTab] = useState("products");
 
@@ -51,37 +53,51 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "pending":
-        return <span className="status pending">Në pritje</span>;
+        return (
+          <span className="status pending">{t("farmerDashboard.pending")}</span>
+        );
       case "approved":
-        return <span className="status approved">Aprovuar</span>;
+        return (
+          <span className="status approved">
+            {t("farmerDashboard.approved")}
+          </span>
+        );
       case "rejected":
-        return <span className="status rejected">Refuzuar</span>;
+        return (
+          <span className="status rejected">
+            {t("farmerDashboard.rejected")}
+          </span>
+        );
       default:
         return <span className="status">{status}</span>;
     }
   };
 
   if (isLoadingProducts && activeTab === "products")
-    return <div className="loading">Duke ngarkuar produktet...</div>;
+    return (
+      <div className="loading">{t("farmerDashboard.loadingProducts")}</div>
+    );
   if (isLoadingRequests && activeTab === "requests")
-    return <div className="loading">Duke ngarkuar kërkesat...</div>;
+    return (
+      <div className="loading">{t("farmerDashboard.loadingRequests")}</div>
+    );
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Paneli i Fermerit</h1>
+        <h1>{t("farmerDashboard.title")}</h1>
         <div className="dashboard-tabs">
           <button
             className={`tab-button ${activeTab === "products" ? "active" : ""}`}
             onClick={() => setActiveTab("products")}
           >
-            Produktet e Mia
+            {t("farmerDashboard.products")}
           </button>
           <button
             className={`tab-button ${activeTab === "requests" ? "active" : ""}`}
             onClick={() => setActiveTab("requests")}
           >
-            Kërkesat e Blerjeve
+            {t("farmerDashboard.requests")}
             {requests.filter((r) => r.status === "pending").length > 0 && (
               <span className="notification-badge">
                 {requests.filter((r) => r.status === "pending").length}
@@ -91,32 +107,36 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
         </div>
         {activeTab === "products" && (
           <Link to="/farmer/add-product" className="add-button">
-            + Shto Produkt
+            {t("farmerDashboard.addProduct")}
           </Link>
         )}
       </div>
 
       {productsError && activeTab === "products" && (
-        <div className="error-message">Gabim në ngarkim të produkteve</div>
+        <div className="error-message">
+          {t("farmerDashboard.errorProducts")}
+        </div>
       )}
       {requestsError && activeTab === "requests" && (
-        <div className="error-message">Gabim në ngarkim të kërkesave</div>
+        <div className="error-message">
+          {t("farmerDashboard.errorRequests")}
+        </div>
       )}
       {deleteMutation.error && (
-        <div className="error-message">Gabim në fshirjen e produktit</div>
+        <div className="error-message">{t("farmerDashboard.errorDelete")}</div>
       )}
       {updateRequestStatusMutation.error && (
-        <div className="error-message">Gabim në përditësimin e statusit</div>
+        <div className="error-message">
+          {t("farmerDashboard.errorUpdateStatus")}
+        </div>
       )}
 
       {activeTab === "products" && (
         <section className="dashboard-section">
-          <h2>Produktet e Mia</h2>
+          <h2>{t("farmerDashboard.products")}</h2>
 
           {products.length === 0 ? (
-            <p className="no-products">
-              Nuk keni produkte. Shtoni produkte për t'i shfaqur këtu.
-            </p>
+            <p className="no-products">{t("farmerDashboard.noProducts")}</p>
           ) : (
             <div className="products-grid">
               {products.map((product: any) => (
@@ -134,25 +154,22 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
 
       {activeTab === "requests" && (
         <section className="dashboard-section">
-          <h2>Kërkesat e Blerjeve</h2>
+          <h2>{t("farmerDashboard.requests")}</h2>
 
           {requests.length === 0 ? (
-            <p className="no-requests">
-              Nuk keni kërkesa për blerje. Kur konsumatorët bëjnë kërkesa, do të
-              shfaqen këtu.
-            </p>
+            <p className="no-requests">{t("farmerDashboard.noRequests")}</p>
           ) : (
             <div className="requests-list">
               <table className="requests-table">
                 <thead>
                   <tr>
-                    <th>Produkti</th>
-                    <th>Sasia</th>
-                    <th>Konsumatori</th>
-                    <th>Kontakt</th>
-                    <th>Data</th>
-                    <th>Statusi</th>
-                    <th>Veprime</th>
+                    <th>{t("farmerDashboard.product")}</th>
+                    <th>{t("farmerDashboard.quantity")}</th>
+                    <th>{t("farmerDashboard.consumer")}</th>
+                    <th>{t("farmerDashboard.contact")}</th>
+                    <th>{t("farmerDashboard.date")}</th>
+                    <th>{t("farmerDashboard.status")}</th>
+                    <th>{t("farmerDashboard.actions")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -181,7 +198,7 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
                               }
                               disabled={updateRequestStatusMutation.isPending}
                             >
-                              Aprovo
+                              {t("farmerDashboard.approve")}
                             </button>
                             <button
                               className="reject-button"
@@ -190,7 +207,7 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
                               }
                               disabled={updateRequestStatusMutation.isPending}
                             >
-                              Refuzo
+                              {t("farmerDashboard.reject")}
                             </button>
                           </>
                         )}
@@ -198,7 +215,7 @@ export default function FarmerDashboard({ userId }: FarmerDashboardProps) {
                           to={`/products/${request.productId}`}
                           className="view-link"
                         >
-                          Shiko Produktin
+                          {t("farmerDashboard.viewProduct")}
                         </Link>
                       </td>
                     </tr>
