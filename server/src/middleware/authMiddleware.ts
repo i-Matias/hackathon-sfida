@@ -1,8 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import userService from "../services/userService";
+import { PrismaClient } from "@prisma/client";
 
-// Extending Request type to include user property
+const prisma = new PrismaClient();
+
+// Extend Request type to include user
 declare global {
   namespace Express {
     interface Request {
@@ -14,88 +16,76 @@ declare global {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-
-export const generateToken = (userId: number, roleId: number): string => {
-  return jwt.sign({ id: userId, roleId }, JWT_SECRET, {
-    expiresIn: "7d", // Token expires in 7 days
-  });
-};
-
-export const verifyToken = (
-  token: string
-): { id: number; roleId: number } | null => {
-  try {
-    return jwt.verify(token, JWT_SECRET) as { id: number; roleId: number };
-  } catch (error) {
-    return null;
-  }
-};
-
-export const authenticate = (
+export const protect = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
+  let token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Authentication required" });
-  }
-
-  const token = authHeader.split(" ")[1];
-  const decoded = verifyToken(token);
-
-  if (!decoded) {
-    return res.status(401).json({ message: "Invalid or expired token" });
-  }
-
-  // Attach user info to request object
-  req.user = {
-    id: decoded.id,
-    roleId: decoded.roleId,
-  };
-
-  next();
-};
-
-// Check if user is a specific role
-export const hasRole = (roleId: number) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || req.user.roleId !== roleId) {
-      return res
-        .status(403)
-        .json({ message: "Forbidden: insufficient permissions" });
-    }
-    next();
-  };
-};
-
-// Middleware to check resource ownership
-export const isResourceOwner = (
-  resourceGetterFn: (id: number) => Promise<any>,
-  paramIdField: string,
-  ownerIdField: string = "userId"
-) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  // Check if token exists in headers
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     try {
-      const resourceId = Number(req.params[paramIdField]);
-      const resource = await resourceGetterFn(resourceId);
+      // Get token from header
+      token = req.headers.authorization.split(" ")[1];
 
-      if (!resource) {
-        return res.status(404).json({ message: "Resource not found" });
+      // Verify token
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET || "default-secret"
+      ) as jwt.JwtPayload;
+
+      // Get user from the token
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.id },
+        select: { id: true, roleId: true },
+      });
+
+      if (!user) {
+        res.status(401);
+        throw new Error("Not authorized, user not found");
       }
 
-      if (!req.user || req.user.id !== resource[ownerIdField]) {
-        return res.status(403).json({
-          message:
-            "Forbidden: You don't have permission to access this resource",
-        });
-      }
-
+      // Set user in request
+      req.user = user;
       next();
     } catch (error) {
-      next(error);
+      res.status(401).json({ error: "Not authorized, invalid token" });
+      return; // Add this return statement to prevent code execution continuing
     }
-  };
+  } else {
+    // If no token, return unauthorized response
+    res.status(401).json({ error: "Not authorized, no token provided" });
+    return; // Add this return statement to prevent code execution continuing
+  }
+};
+
+// Middleware to check if user is a farmer
+export const isFarmer = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user && req.user.roleId === 1) {
+    next();
+  } else {
+    res.status(403).json({ error: "Not authorized, farmer access required" });
+  }
+};
+
+// Middleware to check if user is a customer
+export const isCustomer = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user && req.user.roleId === 2) {
+    next();
+  } else {
+    res.status(403).json({ error: "Not authorized, customer access required" });
+  }
+};
+
+// Middleware to check if user is an admin
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user && req.user.roleId === 3) {
+    next();
+  } else {
+    res.status(403).json({ error: "Not authorized, admin access required" });
+  }
 };

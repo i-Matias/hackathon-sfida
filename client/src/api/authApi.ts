@@ -25,12 +25,20 @@ export interface User {
 
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    const response = await axios.post("/login", credentials);
+    // Remove roleId from request as the server doesn't use it for login
+    const { email, password } = credentials;
+    const response = await axios.post("/login", { email, password });
     return response.data;
   },
 
   register: async (userData: RegisterData) => {
-    const response = await axios.post("/signup", userData);
+    // Using the exact field names that the server expects
+    const response = await axios.post("/signup", {
+      email: userData.email,
+      password: userData.password,
+      roleId: userData.roleId,
+      userName: userData.userName,
+    });
     return response.data;
   },
 

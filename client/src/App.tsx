@@ -30,22 +30,29 @@ export default function App() {
       const token = localStorage.getItem("authToken");
 
       // If there's a token but no user in state, try to restore the session
-      if (token && !user) {
+      if (token) {
         try {
           // Make a request to verify the token is still valid
           const response = await axios.get("/auth/me");
-          if (response.data.user) {
+          if (response.data && response.data.user) {
             setUser(response.data.user);
+          } else {
+            // Clear token if user data is missing
+            localStorage.removeItem("authToken");
           }
         } catch (error) {
-          // If token is invalid, clear it
+          // If token is invalid, clear it and ensure user is logged out
           localStorage.removeItem("authToken");
+          logout();
         }
+      } else if (!token && user) {
+        // If we have user data but no token, logout to clear the state
+        logout();
       }
     };
 
     checkAuth();
-  }, [user, setUser]);
+  }, [setUser, logout, user]);
 
   // Helper function to determine role
   const getRole = () => {

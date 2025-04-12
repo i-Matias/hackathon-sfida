@@ -67,8 +67,15 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    authApi.logout();
-    set({ user: null });
+    // First remove the token from localStorage
+    localStorage.removeItem("authToken");
+
+    // Then reset the entire state to ensure no user data remains
+    set({
+      user: null,
+      isLoading: false,
+      error: null,
+    });
   },
 
   clearError: () => set({ error: null }),

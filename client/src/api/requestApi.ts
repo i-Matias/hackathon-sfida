@@ -29,7 +29,12 @@ export const requestApi = {
   },
 
   createRequest: async (requestData: RequestFormData) => {
-    const response = await axios.post("/requests", requestData);
+    // Only send the data that the server expects
+    const payload = {
+      productId: requestData.productId,
+      quantity: requestData.quantity,
+    };
+    const response = await axios.post("/requests", payload);
     return response.data;
   },
 

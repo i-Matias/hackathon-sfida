@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
+import { useAuthStore } from "../stores/authStore";
 
 export default function Home() {
+  const { user } = useAuthStore();
+
   return (
     <div className="home-container">
       <section className="hero">
@@ -10,15 +13,25 @@ export default function Home() {
           Produkte të freskëta, organike, dhe vendore direkt nga fermerët
         </p>
         <div className="cta-buttons">
-          <Link to="/login" className="cta-button">
-            Hyr
-          </Link>
-          <Link to="/register" className="cta-button secondary">
-            Regjistrohu
-          </Link>
-          <Link to="/products" className="cta-button outline">
-            Shiko produktet
-          </Link>
+          {user ? (
+            // Show only "View Products" button when logged in
+            <Link to="/products" className="cta-button">
+              Shiko produktet
+            </Link>
+          ) : (
+            // Show all buttons when logged out
+            <>
+              <Link to="/login" className="cta-button">
+                Hyr
+              </Link>
+              <Link to="/register" className="cta-button secondary">
+                Regjistrohu
+              </Link>
+              <Link to="/products" className="cta-button outline">
+                Shiko produktet
+              </Link>
+            </>
+          )}
         </div>
       </section>
 

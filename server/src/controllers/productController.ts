@@ -1,136 +1,142 @@
 import { Request, Response } from "express";
-import catchAsync from "../../catchAsync";
 import productService from "../services/productService";
+import catchAsync from "../../catchAsync";
 
-const addProduct = catchAsync(async (req: Request, res: Response) => {
-  const { name, price, quantity, description } = req.body;
-
-  // Ensure user is authenticated
+// @desc    Create a new product
+// @route   POST /api/products
+// @access  Private/Farmer
+export const createProduct = catchAsync(async (req: Request, res: Response) => {
   if (!req.user) {
-    return res.status(401).json({ message: "Authentication required" });
+    return res.status(401).json({ error: "Not authorized" });
   }
 
-  // Validate required fields
-  if (!name || price === undefined || quantity === undefined || !description) {
-    return res.status(400).json({
-      message: "All fields are required: name, price, quantity, description",
-    });
-  }
-
-  // Use the authenticated user's ID instead of getting it from the body
+  const { name, price, quantity, description } = req.body;
   const userId = req.user.id;
 
   const product = await productService.createProduct(userId, {
     name,
-    price,
-    quantity,
+    price: Number(price),
+    quantity: Number(quantity),
     description,
   });
 
   res.status(201).json({
-    message: "Product added successfully",
     product,
   });
 });
 
-const getAllProducts = catchAsync(async (req: Request, res: Response) => {
-  const { name } = req.query; // Get query params for filtering
+// @desc    Get all products
+// @route   GET /api/products
+// @access  Public
+export const getProducts = catchAsync(async (req: Request, res: Response) => {
+  const name = req.query.name as string | undefined;
+  const products = await productService.getAllProducts(name);
 
-  const products = await productService.getAllProducts(name as string);
-
-  res.status(200).json({
-    message: "All products fetched successfully",
+  res.json({
     products,
   });
 });
 
-const getUserProducts = catchAsync(async (req: Request, res: Response) => {
-  // Ensure user is authenticated
-  if (!req.user) {
-    return res.status(401).json({ message: "Authentication required" });
-  }
+// @desc    Get user products
+// @route   GET /api/products/user
+// @access  Private
+export const getUserProducts = catchAsync(
+  async (req: Request, res: Response) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "Not authorized" });
+    }
 
-  // Use the user ID from the authentication token
-  const userId = req.user.id;
+    const userId = req.query.userId ? Number(req.query.userId) : req.user.id;
 
-  // Optional: Allow admins to view other users' products by specifying userId in query
-  const requestedUserId = req.query.userId ? Number(req.query.userId) : userId;
+    // Only allow users to view their own products unless they're an admin
+    if (userId !== req.user.id && req.user.roleId !== 3) {
+      return res.status(403).json({ error: "Not authorized" });
+    }
 
-  // If accessing another user's products, ensure the requester is an admin (roleId 3)
-  if (requestedUserId !== userId && req.user.roleId !== 3) {
-    return res.status(403).json({
-      message: "You can only view your own products",
+    const products = await productService.getProductsByUser(userId);
+
+    res.json({
+      products,
     });
   }
+);
 
-  const products = await productService.getProductsByUser(requestedUserId);
+// @desc    Get product by ID
+// @route   GET /api/products/:id
+// @access  Public
+export const getProductById = catchAsync(
+  async (req: Request, res: Response) => {
+    const productId = Number(req.params.id);
+    const product = await productService.getProductById(productId);
 
-  res.status(200).json({
-    message: `Products for user ${requestedUserId} fetched successfully`,
-    products,
-  });
-});
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
-const updateProduct = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
+    res.json({
+      product,
+    });
+  }
+);
+
+// @desc    Update product
+// @route   PUT /api/products/:id
+// @access  Private/Farmer
+export const updateProduct = catchAsync(async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Not authorized" });
+  }
+
+  const productId = Number(req.params.id);
   const { name, price, quantity, description } = req.body;
 
-  // Ownership is already verified by middleware
+  // Check if product exists
+  const product = await productService.getProductById(productId);
 
-  // Validate required fields
-  if (!name && price === undefined && quantity === undefined && !description) {
-    return res.status(400).json({
-      message:
-        "At least one field required: name, price, quantity, description",
-    });
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
   }
 
-  const updatedProduct = await productService.updateProduct(Number(productId), {
+  // Check if user owns the product or is admin
+  if (product.userId !== req.user.id && req.user.roleId !== 3) {
+    return res.status(403).json({ error: "Not authorized" });
+  }
+
+  const updatedProduct = await productService.updateProduct(productId, {
     name,
-    price,
-    quantity,
+    price: price ? Number(price) : undefined,
+    quantity: quantity ? Number(quantity) : undefined,
     description,
   });
 
-  res.status(200).json({
-    message: "Product updated successfully",
+  res.json({
     product: updatedProduct,
   });
 });
 
-const deleteProduct = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
-
-  // Ownership is already verified by middleware
-  await productService.deleteProduct(Number(productId));
-
-  res.status(200).json({
-    message: "Product deleted successfully",
-  });
-});
-
-const getProductById = catchAsync(async (req: Request, res: Response) => {
-  const { productId } = req.params;
-
-  const product = await productService.getProductById(Number(productId));
-
-  if (!product) {
-    return res.status(404).json({
-      message: "Product not found",
-    });
+// @desc    Delete product
+// @route   DELETE /api/products/:id
+// @access  Private/Farmer
+export const deleteProduct = catchAsync(async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Not authorized" });
   }
 
-  res.status(200).json({
-    message: "Product fetched successfully",
-    product,
-  });
-});
+  const productId = Number(req.params.id);
 
-export default {
-  addProduct,
-  getAllProducts,
-  getUserProducts,
-  updateProduct,
-  deleteProduct,
-  getProductById,
-};
+  // Check if product exists
+  const product = await productService.getProductById(productId);
+
+  if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+  }
+
+  // Check if user owns the product or is admin
+  if (product.userId !== req.user.id && req.user.roleId !== 3) {
+    return res.status(403).json({ error: "Not authorized" });
+  }
+
+  await productService.deleteProduct(productId);
+
+  res.json({ message: "Product removed" });
+});
