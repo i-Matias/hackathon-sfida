@@ -163,7 +163,7 @@ const translations: Record<Language, Record<string, string>> = {
     "success.message": "Sukses:",
 
     // Language toggle
-    language: "Shqip",
+    language: "English",
 
     // Profile Page
     "profile.title": "Profili Im",
@@ -330,7 +330,7 @@ const translations: Record<Language, Record<string, string>> = {
     "success.message": "Success:",
 
     // Language toggle
-    language: "English",
+    language: "Shqip",
 
     // Profile Page
     "profile.title": "My Profile",
