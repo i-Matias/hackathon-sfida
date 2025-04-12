@@ -1,0 +1,141 @@
+.product-detail-container {
+    padding: 20px 0;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-block;
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #2a762c;
+    text-decoration: underline;
+}
+
+.product-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.product-info {
+    padding: 30px;
+}
+
+.product-info h1 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+.product-description {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.detail-item span:first-child {
+    font-weight: 500;
+    color: #555;
+}
+
+.owner-actions {
+    margin-top: 20px;
+}
+
+.edit-button {
+    display: inline-block;
+    background-color: #f0f9f0;
+    color: #2a762c;
+    border: 1px solid #2a762c;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.edit-button:hover {
+    background-color: #e0f0e0;
+    text-decoration: none;
+}
+
+.request-form {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+}
+
+.request-button {
+    width: 100%;
+    background-color: #2a762c;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 15px;
+}
+
+.request-button:hover {
+    background-color: #225f23;
+}
+
+.login-to-request-button {
+    display: block;
+    text-align: center;
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 20px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-to-request-button:hover {
+    background-color: #e0e0e0;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .product-detail-content {
+        grid-template-columns: 1fr;
+    }
+}
