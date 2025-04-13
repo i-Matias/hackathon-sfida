@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import "../styles/ProductDetail.css";
 import { useProducts } from "../hooks/useProducts";
 import { useRequests } from "../hooks/useRequests";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface ProductDetailProps {
   user: { id: number; role: string } | null;
@@ -14,6 +15,7 @@ export default function ProductDetail({ user }: ProductDetailProps) {
   const [requestQuantity, setRequestQuantity] = useState(1);
   const [requestSuccess, setRequestSuccess] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { useProduct } = useProducts();
   const { useCreateRequest } = useRequests();
@@ -51,26 +53,27 @@ export default function ProductDetail({ user }: ProductDetailProps) {
     }
   };
 
-  if (isLoading) return <div className="loading">Duke ngarkuar...</div>;
-  if (!product) return <div className="error-message">Produkti nuk u gjet</div>;
+  if (isLoading) return <div className="loading">{t("loading")}</div>;
+  if (!product)
+    return <div className="error-message">{t("productDetail.notFound")}</div>;
 
   const isOwner = user && user.role === "farmer" && product.userId === user.id;
 
   return (
     <div className="product-detail-container">
       <Link to="/products" className="back-link">
-        ← Kthehu te produktet
+        {t("productDetail.backToProducts")}
       </Link>
 
       {error && (
-        <div className="error-message">Gabim në ngarkim të produktit</div>
+        <div className="error-message">{t("productDetail.loadingError")}</div>
       )}
       {createRequestMutation.error && (
-        <div className="error-message">Gabim në dërgimin e kërkesës</div>
+        <div className="error-message">{t("productDetail.requestError")}</div>
       )}
       {requestSuccess && (
         <div className="success-message">
-          Kërkesa juaj u dërgua me sukses! Fermeri do të përgjigjet së shpejti.
+          {t("productDetail.requestSuccess")}
         </div>
       )}
 
@@ -81,13 +84,15 @@ export default function ProductDetail({ user }: ProductDetailProps) {
 
           <div className="product-details">
             <div className="detail-item">
-              <span>Çmimi:</span> {product.price.toFixed(2)} €/kg
+              <span>{t("productDetail.price")}:</span>{" "}
+              {product.price.toFixed(2)} Lek/kg
             </div>
             <div className="detail-item">
-              <span>Sasia e Disponueshme:</span> {product.quantity} kg
+              <span>{t("productDetail.availableQuantity")}:</span>{" "}
+              {product.quantity} kg
             </div>
             <div className="detail-item">
-              <span>Fermeri:</span> {product.user.username}
+              <span>{t("product.farmer")}:</span> {product.user.username}
             </div>
           </div>
 
@@ -97,13 +102,13 @@ export default function ProductDetail({ user }: ProductDetailProps) {
                 to={`/farmer/edit-product/${product.id}`}
                 className="edit-button"
               >
-                Ndrysho Produktin
+                {t("productDetail.editProduct")}
               </Link>
             </div>
           ) : user && user.role === "customer" ? (
             <form onSubmit={handleRequestSubmit} className="request-form">
               <div className="form-group">
-                <label htmlFor="quantity">Sasia (kg):</label>
+                <label htmlFor="quantity">{t("productDetail.quantity")}:</label>
                 <input
                   type="number"
                   id="quantity"
@@ -121,13 +126,13 @@ export default function ProductDetail({ user }: ProductDetailProps) {
                 disabled={createRequestMutation.isPending}
               >
                 {createRequestMutation.isPending
-                  ? "Duke dërguar..."
-                  : "Dërgo Kërkesën për Blerje"}
+                  ? t("productDetail.sending")
+                  : t("productDetail.submitRequest")}
               </button>
             </form>
           ) : (
             <Link to="/login" className="login-to-request-button">
-              Identifikohu për të Blerë
+              {t("productDetail.loginToBuy")}
             </Link>
           )}
         </div>

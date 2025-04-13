@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/ProductForm.css";
 import { useProducts } from "../hooks/useProducts";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface AddProductProps {
   userId: number;
@@ -14,6 +15,7 @@ export default function AddProduct({ userId }: AddProductProps) {
   const [description, setDescription] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { useCreateProduct } = useProducts();
   const createMutation = useCreateProduct();
@@ -49,44 +51,44 @@ export default function AddProduct({ userId }: AddProductProps) {
   return (
     <div className="product-form-container">
       <Link to="/farmer/dashboard" className="back-link">
-        ← Kthehu te Paneli
+        {t("productForm.backToDashboard")}
       </Link>
 
-      <h1>Shto Produkt të Ri</h1>
+      <h1>{t("productForm.addTitle")}</h1>
 
       {createMutation.error && (
         <div className="error-message">
           {createMutation.error instanceof Error
             ? createMutation.error.message
-            : "Gabim në shtimin e produktit"}
+            : t("productForm.addError")}
         </div>
       )}
 
       {success && (
-        <div className="success-message">Produkti u shtua me sukses!</div>
+        <div className="success-message">{t("productForm.updateSuccess")}</div>
       )}
 
       <form onSubmit={handleSubmit} className="product-form">
         <div className="form-group">
-          <label htmlFor="name">Emri i Produktit</label>
+          <label htmlFor="name">{t("productForm.productName")}</label>
           <input
             type="text"
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="p.sh. Domate Bio"
+            placeholder={t("productForm.productNamePlaceholder")}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="price">Çmimi (€/kg)</label>
+          <label htmlFor="price">{t("productForm.price")}</label>
           <input
             type="number"
             id="price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="p.sh. 2.50"
+            placeholder={t("productForm.pricePlaceholder")}
             step="0.01"
             min="0"
             required
@@ -94,25 +96,25 @@ export default function AddProduct({ userId }: AddProductProps) {
         </div>
 
         <div className="form-group">
-          <label htmlFor="quantity">Sasia (kg)</label>
+          <label htmlFor="quantity">{t("productForm.quantity")}</label>
           <input
             type="number"
             id="quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            placeholder="p.sh. 50"
+            placeholder={t("productForm.quantityPlaceholder")}
             min="1"
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Përshkrimi</label>
+          <label htmlFor="description">{t("productForm.description")}</label>
           <textarea
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Përshkruani produktin tuaj"
+            placeholder={t("productForm.descriptionPlaceholder")}
             required
           />
         </div>
@@ -122,7 +124,9 @@ export default function AddProduct({ userId }: AddProductProps) {
           className="submit-button"
           disabled={createMutation.isPending}
         >
-          {createMutation.isPending ? "Duke shtuar..." : "Shto Produktin"}
+          {createMutation.isPending
+            ? t("productForm.adding")
+            : t("productForm.addButton")}
         </button>
       </form>
     </div>

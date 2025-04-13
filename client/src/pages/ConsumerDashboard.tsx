@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/Dashboard.css";
 import { useRequests } from "../hooks/useRequests";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface ConsumerDashboardProps {
   userId: number;
@@ -8,6 +9,7 @@ interface ConsumerDashboardProps {
 
 export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
   const { useUserRequests } = useRequests();
+  const { t } = useLanguage();
 
   const { data, isLoading, error } = useUserRequests(userId);
   const requests = data?.requests || [];
@@ -15,49 +17,59 @@ export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "pending":
-        return <span className="status pending">Në pritje</span>;
+        return (
+          <span className="status pending">{t("farmerDashboard.pending")}</span>
+        );
       case "approved":
-        return <span className="status approved">Aprovuar</span>;
+        return (
+          <span className="status approved">
+            {t("farmerDashboard.approved")}
+          </span>
+        );
       case "rejected":
-        return <span className="status rejected">Refuzuar</span>;
+        return (
+          <span className="status rejected">
+            {t("farmerDashboard.rejected")}
+          </span>
+        );
       default:
         return <span className="status">{status}</span>;
     }
   };
 
-  if (isLoading) return <div className="loading">Duke ngarkuar...</div>;
+  if (isLoading) return <div className="loading">{t("loading")}</div>;
 
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Paneli i Konsumatorit</h1>
+        <h1>{t("consumerDashboard.title")}</h1>
         <Link to="/products" className="add-button">
-          Shfletoni Produktet
+          {t("consumerDashboard.browseProducts")}
         </Link>
       </div>
 
       {error && (
-        <div className="error-message">Gabim në ngarkim të kërkesave</div>
+        <div className="error-message">
+          {t("consumerDashboard.errorRequests")}
+        </div>
       )}
 
       <section className="dashboard-section">
-        <h2>Kërkesat e Mia</h2>
+        <h2>{t("consumerDashboard.myRequests")}</h2>
 
         {requests.length === 0 ? (
-          <p className="no-requests">
-            Nuk keni kërkesa aktive. Shfletoni produktet për të bërë kërkesa.
-          </p>
+          <p className="no-requests">{t("consumerDashboard.noRequests")}</p>
         ) : (
           <div className="requests-list">
             <table className="requests-table">
               <thead>
                 <tr>
-                  <th>Produkti</th>
-                  <th>Sasia</th>
-                  <th>Fermeri</th>
-                  <th>Data</th>
-                  <th>Statusi</th>
-                  <th>Veprime</th>
+                  <th>{t("farmerDashboard.product")}</th>
+                  <th>{t("farmerDashboard.quantity")}</th>
+                  <th>{t("product.farmer")}</th>
+                  <th>{t("farmerDashboard.date")}</th>
+                  <th>{t("farmerDashboard.status")}</th>
+                  <th>{t("farmerDashboard.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -75,7 +87,7 @@ export default function ConsumerDashboard({ userId }: ConsumerDashboardProps) {
                         to={`/products/${request.productId}`}
                         className="view-link"
                       >
-                        Shiko Produktin
+                        {t("farmerDashboard.viewProduct")}
                       </Link>
                     </td>
                   </tr>
