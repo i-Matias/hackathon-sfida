@@ -51,7 +51,7 @@ export default function Header({ user, onLogout }: HeaderProps) {
             </>
           ) : (
             <>
-              {/* <Link to="/products">{t("nav.products")}</Link> */}
+              <Link to="/products">{t("nav.products")}</Link>
               <Link to="/login">{t("nav.login")}</Link>
               <Link to="/register">{t("nav.register")}</Link>
             </>

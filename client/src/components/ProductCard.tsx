@@ -40,7 +40,7 @@ export default function ProductCard({
         </p>
 
         <div className="product-details">
-          <span className="product-price">{product.price.toFixed(2)} €/kg</span>
+          <span className="product-price">{product.price.toFixed(2)} Lek/kg</span>
           <span className="product-quantity">
             {t("product.quantity")}: {product.quantity} kg
           </span>
