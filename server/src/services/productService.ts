@@ -35,6 +35,20 @@ const getAllProducts = async (name?: string, category?: string) => {
   return products;
 };
 
+const getAllProductsWithUserDetails = async () => {
+  return prisma.product.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      },
+    },
+  });
+};
+
 const getProductsByUser = async (userId: number) => {
   const products = await prisma.product.findMany({
     where: { userId },
@@ -85,11 +99,17 @@ const getProductById = async (id: number) => {
   return product;
 };
 
+const getProductCount = async () => {
+  return prisma.product.count();
+};
+
 export default {
   createProduct,
   getAllProducts,
+  getAllProductsWithUserDetails,
   getProductsByUser,
   updateProduct,
   deleteProduct,
   getProductById,
+  getProductCount,
 };

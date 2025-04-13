@@ -187,6 +187,56 @@ const translations: Record<Language, Record<string, string>> = {
       "Fjalëkalimi duhet të jetë të paktën 6 karaktere",
     "profile.currentPasswordRequired":
       "Kërkohet fjalëkalimi aktual për të ndryshuar fjalëkalimin",
+
+    // Admin specific translations
+    "nav.adminDashboard": "Paneli i Adminit",
+    "nav.adminLogin": "Admin",
+    "auth.adminLoginTitle": "Hyrje për Administrator",
+    "auth.adminLoginButton": "Hyr si Administrator",
+    "auth.notAdmin":
+      "Ju duhet të jeni administrator për të hyrë në këtë seksion.",
+
+    "admin.dashboardTitle": "Paneli i Administratorit",
+    "admin.overview": "Përmbledhje",
+    "admin.products": "Produktet",
+    "admin.requests": "Kërkesat",
+    "admin.users": "Përdoruesit",
+    "admin.statistics": "Statistikat",
+
+    "admin.totalUsers": "Përdorues Gjithsej",
+    "admin.totalFarmers": "Fermerë Gjithsej",
+    "admin.totalCustomers": "Konsumatorë Gjithsej",
+    "admin.totalProducts": "Produkte Gjithsej",
+    "admin.pendingRequests": "Kërkesa në Pritje",
+
+    "admin.allProducts": "Të Gjitha Produktet",
+    "admin.allRequests": "Të Gjitha Kërkesat",
+    "admin.allUsers": "Të Gjithë Përdoruesit",
+    "admin.actions": "Veprimet",
+
+    "admin.view": "Shiko",
+    "admin.viewProduct": "Shiko Produktin",
+    "admin.edit": "Ndrysho",
+    "admin.delete": "Fshi",
+    "admin.confirmDelete": "Konfirmo",
+    "admin.cancel": "Anulo",
+
+    "admin.noProducts": "Nuk ka produkte të disponueshme",
+    "admin.noRequests": "Nuk ka kërkesa të disponueshme",
+    "admin.noUsers": "Nuk ka përdorues të disponueshm",
+
+    "admin.adminRole": "Administrator",
+    "admin.cannotDeleteAdmin": "Llogari administratori",
+    "admin.yourAccount": "Llogaria juaj",
+
+    "admin.loadingStats": "Duke ngarkuar statistikat...",
+    "admin.loadingUsers": "Duke ngarkuar përdoruesit...",
+    "admin.loadingProducts": "Duke ngarkuar produktet...",
+    "admin.loadingRequests": "Duke ngarkuar kërkesat...",
+
+    "admin.errorDeleteUser": "Gabim gjatë fshirjes së përdoruesit",
+    "admin.errorDeleteProduct": "Gabim gjatë fshirjes së produktit",
+    "admin.errorUpdateStatus": "Gabim gjatë përditësimit të statusit",
   },
   en: {
     // Header
@@ -353,6 +403,55 @@ const translations: Record<Language, Record<string, string>> = {
     "profile.passwordTooShort": "Password must be at least 6 characters",
     "profile.currentPasswordRequired":
       "Current password is required to change password",
+
+    // Admin specific translations
+    "nav.adminDashboard": "Admin Dashboard",
+    "nav.adminLogin": "Admin",
+    "auth.adminLoginTitle": "Administrator Login",
+    "auth.adminLoginButton": "Login as Administrator",
+    "auth.notAdmin": "You must be an administrator to access this section.",
+
+    "admin.dashboardTitle": "Administrator Dashboard",
+    "admin.overview": "Overview",
+    "admin.products": "Products",
+    "admin.requests": "Requests",
+    "admin.users": "Users",
+    "admin.statistics": "Statistics",
+
+    "admin.totalUsers": "Total Users",
+    "admin.totalFarmers": "Total Farmers",
+    "admin.totalCustomers": "Total Customers",
+    "admin.totalProducts": "Total Products",
+    "admin.pendingRequests": "Pending Requests",
+
+    "admin.allProducts": "All Products",
+    "admin.allRequests": "All Requests",
+    "admin.allUsers": "All Users",
+    "admin.actions": "Actions",
+
+    "admin.view": "View",
+    "admin.viewProduct": "View Product",
+    "admin.edit": "Edit",
+    "admin.delete": "Delete",
+    "admin.confirmDelete": "Confirm",
+    "admin.cancel": "Cancel",
+
+    "admin.noProducts": "No products available",
+    "admin.noRequests": "No requests available",
+    "admin.noUsers": "No users available",
+
+    "admin.adminRole": "Administrator",
+    "admin.cannotDeleteAdmin": "Admin account",
+    "admin.yourAccount": "Your account",
+
+    "admin.loadingStats": "Loading statistics...",
+    "admin.loadingUsers": "Loading users...",
+    "admin.loadingProducts": "Loading products...",
+    "admin.loadingRequests": "Loading requests...",
+
+    "admin.errorDeleteUser": "Failed to delete user",
+    "admin.errorDeleteProduct": "Failed to delete product",
+    "admin.errorUpdateStatus": "Failed to update request status",
   },
 };
 

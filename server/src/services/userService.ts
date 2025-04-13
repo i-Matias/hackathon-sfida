@@ -50,10 +50,58 @@ const updateUser = async (userId: number, data: any) => {
   });
 };
 
+const getAllUsers = async () => {
+  return prisma.user.findMany({
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      roleId: true,
+      role: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+};
+
+const deleteUser = async (id: number) => {
+  // First check if user exists
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  // Delete all related records (requests, products) - add cascade delete in your schema
+
+  // Delete the user
+  return prisma.user.delete({
+    where: { id },
+  });
+};
+
+const getUserCount = async () => {
+  return prisma.user.count();
+};
+
+const getUserCountByRole = async (roleId: number) => {
+  return prisma.user.count({
+    where: { roleId },
+  });
+};
+
 export default {
   login,
   register,
   getUserByEmail,
   getUserById,
   updateUser,
+  getAllUsers,
+  deleteUser,
+  getUserCount,
+  getUserCountByRole,
 };

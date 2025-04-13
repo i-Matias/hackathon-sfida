@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
+import "../styles/Animation.css";
 import { useLanguage } from "../contexts/LanguageContext";
 
 interface HeaderProps {
@@ -24,40 +25,93 @@ export default function Header({ user, onLogout }: HeaderProps) {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo">
+        <Link
+          to="/"
+          className="logo animate__animated animate__pulse animate__slow animate__infinite"
+        >
           MerrBio
         </Link>
 
         <nav className="nav-links">
           {user ? (
             <>
-              {/* Only show Products link to customers */}
+              {/* Show different links based on user role */}
               {user.role === "customer" && (
-                <Link to="/products">{t("nav.products")}</Link>
+                <Link
+                  to="/products"
+                  className="animate__animated animate__fadeIn"
+                >
+                  {t("nav.products")}
+                </Link>
               )}
 
               {user.role === "farmer" ? (
-                <Link to="/farmer/dashboard">{t("nav.dashboard")}</Link>
+                <Link
+                  to="/farmer/dashboard"
+                  className="animate__animated animate__fadeIn"
+                >
+                  {t("nav.dashboard")}
+                </Link>
+              ) : user.role === "customer" ? (
+                <Link
+                  to="/consumer/dashboard"
+                  className="animate__animated animate__fadeIn"
+                >
+                  {t("nav.dashboard")}
+                </Link>
               ) : (
-                <Link to="/consumer/dashboard">{t("nav.dashboard")}</Link>
+                user.role === "admin" && (
+                  <Link
+                    to="/admin/dashboard"
+                    className="animate__animated animate__fadeIn"
+                  >
+                    {t("nav.adminDashboard") || "Admin Dashboard"}
+                  </Link>
+                )
               )}
 
               {/* Add Profile link */}
-              <Link to="/profile">{t("nav.profile")}</Link>
+              <Link to="/profile" className="animate__animated animate__fadeIn">
+                {t("nav.profile")}
+              </Link>
 
-              <button onClick={handleLogout} className="logout-button">
+              <button
+                onClick={handleLogout}
+                className="logout-button animate__animated animate__fadeIn animated-button"
+              >
                 {t("nav.logout")}
               </button>
             </>
           ) : (
             <>
-              <Link to="/products">{t("nav.products")}</Link>
-              <Link to="/login">{t("nav.login")}</Link>
-              <Link to="/register">{t("nav.register")}</Link>
+              <Link
+                to="/products"
+                className="animate__animated animate__fadeIn"
+              >
+                {t("nav.products")}
+              </Link>
+              <Link to="/login" className="animate__animated animate__fadeIn">
+                {t("nav.login")}
+              </Link>
+              <Link
+                to="/register"
+                className="animate__animated animate__fadeIn"
+              >
+                {t("nav.register")}
+              </Link>
+              <Link
+                to="/admin/login"
+                className="admin-login-link animate__animated animate__fadeIn"
+              >
+                {t("nav.adminLogin") || "Admin"}
+              </Link>
             </>
           )}
-          <button onClick={toggleLanguage} className="language-toggle">
-            {t("language")}
+          <button
+            onClick={toggleLanguage}
+            className="language-toggle animate__animated animate__fadeIn animated-button"
+          >
+            {language === "sq" ? "EN" : "SQ"}
           </button>
         </nav>
       </div>

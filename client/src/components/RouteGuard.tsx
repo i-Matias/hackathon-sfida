@@ -18,10 +18,19 @@ export const PrivateRoute = ({ children, requiredRole }: PrivateRouteProps) => {
 
   // If a specific role is required, check if user has the required role
   if (requiredRole) {
-    const userRole = user.roleId === 1 ? "farmer" : "customer";
+    let userRole;
+
+    if (user.roleId === 1) userRole = "farmer";
+    else if (user.roleId === 2) userRole = "customer";
+    else if (user.roleId === 3) userRole = "admin";
+
     if (userRole !== requiredRole) {
-      // Redirect to appropriate dashboard if they don't have the required role
-      return <Navigate to={`/${userRole}/dashboard`} replace />;
+      // Redirect to appropriate dashboard based on role
+      if (userRole === "admin") {
+        return <Navigate to="/admin/dashboard" replace />;
+      } else {
+        return <Navigate to={`/${userRole}/dashboard`} replace />;
+      }
     }
   }
 
@@ -41,8 +50,17 @@ export const PublicRoute = ({
 
   // If route is restricted and user is logged in, redirect to appropriate dashboard
   if (restricted && user) {
-    const userRole = user.roleId === 1 ? "farmer" : "customer";
-    return <Navigate to={`/${userRole}/dashboard`} replace />;
+    let userRole;
+
+    if (user.roleId === 1) userRole = "farmer";
+    else if (user.roleId === 2) userRole = "customer";
+    else if (user.roleId === 3) userRole = "admin";
+
+    if (userRole === "admin") {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else {
+      return <Navigate to={`/${userRole}/dashboard`} replace />;
+    }
   }
 
   return <>{children}</>;

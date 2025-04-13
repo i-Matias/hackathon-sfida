@@ -1,0 +1,168 @@
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 30px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Staggered entrance animation for lists */
+.staggered-animation>* {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.staggered-animation>*:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.staggered-animation>*:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.staggered-animation>*:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.staggered-animation>*:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.staggered-animation>*:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.staggered-animation>*:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.staggered-animation>*:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.staggered-animation>*:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.staggered-animation>*:nth-child(9) {
+    animation-delay: 0.9s;
+}
+
+.staggered-animation>*:nth-child(10) {
+    animation-delay: 1.0s;
+}
+
+/* Button hover animations */
+.animated-button {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.animated-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Page transition animation */
+.page-transition-enter {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 400ms, transform 400ms;
+}
+
+.page-transition-exit {
+    opacity: 1;
+}
+
+.page-transition-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+/* Loading animation */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin: 30px auto;
+    border: 4px solid rgba(42, 118, 44, 0.1);
+    border-radius: 50%;
+    border-top-color: #2a762c;
+    animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Success message animation */
+.success-message {
+    animation: slideInAndFade 0.5s ease;
+}
+
+@keyframes slideInAndFade {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Logo hover effect */
+.logo {
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+/* Card hover animations */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}

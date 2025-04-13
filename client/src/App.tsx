@@ -22,6 +22,8 @@ import { useAuthStore } from "./stores/authStore";
 import EditProduct from "./pages/EditProduct";
 import axios from "./api/axios";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 
 export default function App() {
   const { user, logout, setUser } = useAuthStore();
@@ -112,6 +114,24 @@ export default function App() {
                       user={user ? { id: user.id, role: role! } : null}
                     />
                   </PublicRoute>
+                }
+              />
+
+              {/* Admin Routes */}
+              <Route
+                path="/admin/login"
+                element={
+                  <PublicRoute restricted>
+                    <AdminLogin />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <PrivateRoute requiredRole="admin">
+                    <AdminDashboard userId={user?.id || 0} />
+                  </PrivateRoute>
                 }
               />
 

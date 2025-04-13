@@ -79,10 +79,46 @@ const getRequestById = async (requestId: number) => {
   return request;
 };
 
+const getAllRequestsWithDetails = async () => {
+  return prisma.productRequest.findMany({
+    include: {
+      product: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+            },
+          },
+        },
+      },
+      customer: {
+        select: {
+          id: true,
+          username: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      requestedAt: "desc",
+    },
+  });
+};
+
+const getRequestCountByStatus = async (status: string) => {
+  return prisma.productRequest.count({
+    where: { status },
+  });
+};
+
 export default {
   createRequest,
   getUserRequests,
   getFarmerRequests,
   updateRequestStatus,
   getRequestById,
+  getAllRequestsWithDetails,
+  getRequestCountByStatus,
 };

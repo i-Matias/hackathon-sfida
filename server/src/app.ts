@@ -3,6 +3,7 @@ import express from "express";
 import userRoutes from "./routes/userRoutes";
 import productRoutes from "./routes/productRoutes";
 import requestRoutes from "./routes/requestRoutes";
+import adminRoutes from "./routes/adminRoutes";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api", userRoutes);
 app.use("/api", productRoutes);
 app.use("/api", requestRoutes);
+app.use("/api", adminRoutes);
 
 // Error handling middleware
 app.use(

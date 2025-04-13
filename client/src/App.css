@@ -16,14 +16,16 @@
 /* Common styles */
 .loading {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 120px;
+    height: 200px;
     font-size: 18px;
     color: #666;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease;
 }
 
 .error-message {
@@ -37,6 +39,7 @@
     display: flex;
     align-items: center;
     box-shadow: 0 2px 5px rgba(229, 62, 62, 0.1);
+    animation: slideIn 0.3s ease;
 }
 
 .success-message {
@@ -50,6 +53,7 @@
     display: flex;
     align-items: center;
     box-shadow: 0 2px 5px rgba(56, 161, 105, 0.1);
+    animation: slideInAndFade 0.5s ease;
 }
 
 /* Improved buttons */
