@@ -25,14 +25,12 @@ export interface User {
 
 export const authApi = {
   login: async (credentials: LoginCredentials) => {
-    // Only send email and password to the server
     const { email, password } = credentials;
     const response = await axios.post("/login", { email, password });
     return response.data;
   },
 
   register: async (userData: RegisterData) => {
-    // Using the exact field names that the server expects
     const response = await axios.post("/signup", {
       email: userData.email,
       password: userData.password,
@@ -42,7 +40,6 @@ export const authApi = {
     return response.data;
   },
 
-  // This is a client-side function as the server doesn't need a logout endpoint
   logout: () => {
     localStorage.removeItem("authToken");
   },

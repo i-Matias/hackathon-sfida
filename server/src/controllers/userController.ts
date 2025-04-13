@@ -3,9 +3,6 @@ import userService from "../services/userService";
 import { generateToken } from "../utils/jwt";
 import catchAsync from "../../catchAsync";
 
-// @desc    Register a new user
-// @route   POST /api/signup
-// @access  Public
 export const registerUser = catchAsync(async (req: Request, res: Response) => {
   const { email, password, roleId, userName } = req.body;
 
@@ -33,9 +30,6 @@ export const registerUser = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-// @desc    Auth user & get token
-// @route   POST /api/login
-// @access  Public
 export const loginUser = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
@@ -56,9 +50,6 @@ export const loginUser = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-// @desc    Get user profile
-// @route   GET /api/auth/me
-// @access  Private
 export const getUserProfile = catchAsync(
   async (req: Request, res: Response) => {
     if (!req.user) {

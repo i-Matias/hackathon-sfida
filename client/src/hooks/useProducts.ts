@@ -30,19 +30,16 @@ export const useProducts = () => {
     });
   };
 
-  // Create product mutation
   const useCreateProduct = () => {
     return useMutation({
       mutationFn: (data: ProductFormData) => productApi.createProduct(data),
       onSuccess: () => {
-        // Invalidate queries related to products
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       },
     });
   };
 
-  // Update product mutation
   const useUpdateProduct = () => {
     return useMutation({
       mutationFn: ({
@@ -61,7 +58,6 @@ export const useProducts = () => {
     });
   };
 
-  // Delete product mutation
   const useDeleteProduct = () => {
     return useMutation({
       mutationFn: (id: number) => productApi.deleteProduct(id),

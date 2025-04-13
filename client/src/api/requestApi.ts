@@ -39,7 +39,6 @@ export const requestApi = {
   },
 
   createRequest: async (requestData: RequestFormData) => {
-    // Only send the data that the server expects
     const payload = {
       productId: requestData.productId,
       quantity: requestData.quantity,
